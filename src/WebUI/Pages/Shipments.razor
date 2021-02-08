@@ -1,0 +1,129 @@
+﻿@page "/shipments"
+@*@inject IUmAlQuraOperations umAlQuraOperations*@
+@inject Microsoft.AspNetCore.Components.NavigationManager Navigation
+
+
+<h3>تسجيل شحنه</h3>
+
+<EditForm Model="@FModel">
+    <DataAnnotationsValidator />
+
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label for="Customer">الراسل</label>
+
+            <SfDropDownList TValue="string" TItem="LookupDto" Placeholder="اختر الراسل" DataSource="@CustomersData">
+                <DropDownListFieldSettings Value="ID" Text="Name"></DropDownListFieldSettings>
+            </SfDropDownList>
+        </div>
+
+    </div>
+    <div class="row">
+            <div class="form-group col-md-6">
+                <label for="ReceiverName">أسم المرسل اليه</label>
+                <InputText id="ReceiverName" class="form-control" @bind-Value="FModel.ReceiverName"></InputText>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="ReceiverPhone">تليفون المرسل اليه</label>
+                <InputText id="ReceiverPhone" class="form-control" @bind-Value="FModel.ReceiverPhone"></InputText>
+            </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label for="State">الاسم</label>
+            <SfDropDownList TValue="string" TItem="LookupDto" Placeholder="اختر المحافظه" DataSource="@StatesData">
+                <DropDownListFieldSettings Value="ID" Text="Name"></DropDownListFieldSettings>
+            </SfDropDownList>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label for="Region">المنطقه</label>
+            <SfDropDownList TValue="string" TItem="LookupDto" Placeholder="اختر المنطقه" DataSource="@RegionsData">
+                <DropDownListFieldSettings Value="ID" Text="Name"></DropDownListFieldSettings>
+            </SfDropDownList>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label for="Notes">التليفون</label>
+            <InputText id="ReceiverPhone" class="form-control" @bind-Value="FModel.ReceiverPhone"></InputText>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        @ButtonText
+    </button>
+</EditForm>
+
+
+
+@code {
+
+
+    [Parameter]
+    public ShipmentsFM FModel { get; set; } = new ShipmentsFM();
+
+    [Parameter]
+    public string ButtonText { get; set; } = "Save";
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+
+
+
+
+
+    public class LookupDto
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+    }
+
+
+    List<LookupDto> StatesData = new List<LookupDto> {
+    new LookupDto() { ID= 1, Name= "القاهره" },
+    new LookupDto() { ID= 2, Name= "الجيزه" },
+    new LookupDto() { ID= 3, Name= "الاسكندريه" },
+    new LookupDto() { ID= 4, Name= "اسيوط" },
+    new LookupDto() { ID= 5, Name= "المنيا" },
+  };
+
+    List<LookupDto> RegionsData = new List<LookupDto> {
+    new LookupDto() { ID= 1, Name= "منطقه 1" },
+    new LookupDto() { ID= 2, Name= "منطقه 2" },
+    new LookupDto() { ID= 3, Name= "منطقه 3" },
+    new LookupDto() { ID= 4, Name= "منطقه 4" },
+    new LookupDto() { ID= 5, Name= "منطقه 5" },
+  };
+
+    List<LookupDto> CustomersData = new List<LookupDto> {
+    new LookupDto() { ID= 1, Name= "أحمد ابراهيم" },
+    new LookupDto() { ID= 2, Name= "محمد" },
+    new LookupDto() { ID= 3, Name= "سامح" },
+    new LookupDto() { ID= 4, Name= "حسين" },
+    new LookupDto() { ID= 5, Name= "عزت" },
+    new LookupDto() { ID= 6, Name= "محمود" },
+    new LookupDto() { ID= 7, Name= "حسام" },
+    new LookupDto() { ID= 8, Name= "حسنين"},
+    new LookupDto() { ID= 9, Name= "واحد حسن" },
+    new LookupDto() { ID= 10, Name= "اتنين حسنين"},
+  };
+
+
+    public class ShipmentsFM
+    {
+        public int ShipmentId { get; set; }
+        public string ShipmentName { get; set; }
+        public int CustomerId { get; set; }
+        public string CustomerName { get; set; }
+        public string ReceiverName { get; set; }
+        public string ReceiverPhone { get; set; }
+        public int ReceiverStateId { get; set; }
+        public string ReceiverStateName { get; set; }
+        public int ReceiverRegionId { get; set; }
+        public string ReceiverRegionName { get; set; }
+        public string Notes { get; set; }
+    }
+
+}
