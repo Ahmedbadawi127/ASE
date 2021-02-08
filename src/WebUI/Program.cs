@@ -1,59 +1,31 @@
-using Shipping.Infrastructure.Identity;
-using Shipping.Infrastructure.Persistence;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
+using Syncfusion.Blazor;
 
-namespace Shipping.WebUI
+namespace WebUI
 {
     public class Program
     {
-        public async static Task Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mzk1MjM5QDMxMzgyZTM0MmUzMEIrSHdpRGpBU0xNTlhxSjdFM1hTTHl0M1FzTm9iWDF1cnFmaXlTOXVXNlU9");
 
-            using (var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
+            var builder = WebAssemblyHostBuilder.CreateDefault(args);
+            builder.RootComponents.Add<App>("app");
 
-                try
-                {
-                    var context = services.GetRequiredService<ApplicationDbContext>();
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-                    if (context.Database.IsSqlServer())
-                    {
-                        context.Database.Migrate();
-                    }                   
+            builder.Services.AddSyncfusionBlazor();
 
-                    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-
-                    await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager, roleManager);
-                    await ApplicationDbContextSeed.SeedSampleDataAsync(context);
-                }
-                catch (Exception ex)
-                {
-                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-
-                    logger.LogError(ex, "An error occurred while migrating or seeding the database.");
-
-                    throw;
-                }
-            }
-
-            await host.RunAsync();
+            await builder.Build().RunAsync();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
     }
 }
