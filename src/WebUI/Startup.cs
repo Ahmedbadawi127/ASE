@@ -38,6 +38,7 @@ namespace Shipping.WebUI
             services.AddApplication();
             services.AddInfrastructure(Configuration);
 
+
             services.AddScoped<ICurrentUserService, CurrentUserService>();
 
             services.AddHttpContextAccessor();
@@ -135,6 +136,7 @@ namespace Shipping.WebUI
             app.UseRouting();
 
             app.UseAuthentication();
+
             app.UseIdentityServer();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
