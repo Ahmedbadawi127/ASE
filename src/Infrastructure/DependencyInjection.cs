@@ -23,14 +23,14 @@ namespace Shipping.Infrastructure
             else
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(
+                    options.UseNpgsql(
                         configuration.GetConnectionString("DefaultConnection"),
                         b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
             }
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
 
-            services.AddScoped<IDomainEventService, DomainEventService>();
+            //services.AddScoped<IDomainEventService, DomainEventService>();
 
             services
                 .AddDefaultIdentity<ApplicationUser>()

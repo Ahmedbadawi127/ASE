@@ -7,7 +7,11 @@ namespace Shipping.Application.Common.Interfaces
 {
     public partial interface IApplicationDbContext
     {
-        DbSet<User> User { get; set; }
+    DbSet<TodoList> TodoLists { get; set; }
 
+        DbSet<TodoItem> TodoItems { get; set; }
+ 
+
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
