@@ -7,4 +7,10 @@
         Medium = 2,
         High = 3
     }
+    public enum UserType
+    {
+        Customer = 1,
+        Manager,
+        Staff   
+    }
 }
