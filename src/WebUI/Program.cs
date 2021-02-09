@@ -1,31 +1,69 @@
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Shipping.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
-using Syncfusion.Blazor;
+using Shipping.Application.Common.Interfaces;
+using Shipping.Infrastructure.Identity;
+using Shipping.WebUI;
 
-namespace WebUI
+namespace Shipping.WebUI
 {
     public class Program
     {
         public static async Task Main(string[] args)
         {
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mzk1MjM5QDMxMzgyZTM0MmUzMEIrSHdpRGpBU0xNTlhxSjdFM1hTTHl0M1FzTm9iWDF1cnFmaXlTOXVXNlU9");
+            var host = CreateHostBuilder(args).Build();
 
-            var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.RootComponents.Add<App>("app");
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+                try
+                {
+                    var context = services.GetRequiredService<ApplicationDbContext>();
 
-            builder.Services.AddSyncfusionBlazor();
+                    // if (context.Database.IsNpgsql())
+                    {
+                        //  context.Database.EnsureDeleted();
+                        context.Database.EnsureCreated();
+                        //dContext.Database.EnsureDeleted();
+                        //context.Database.Migrate();
+                    }
 
-            await builder.Build().RunAsync();
+                    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+                    await ApplicationDbContextSeed.SeedSampleDataAsync(context);
+
+                }
+                catch (Exception ex)
+                {
+                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while migrating or seeding the database.");
+                    //var inner=ex.InnerException;
+                    throw;
+                }
+
+            }
+            await host.RunAsync();
         }
 
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+
+                    // 40
+                    //webBuilder.UseUrls("http://0.0.0.0:5000", "https://0.0.0.0:5001");
+                });
     }
 }

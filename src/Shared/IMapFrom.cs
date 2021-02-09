@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace eServices.Shared
+namespace Shipping.Shared
 {
     public interface IMapFrom<T>
     {   

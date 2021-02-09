@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\WebUI\WebUI.csproj" />
   </ItemGroup>
 
 </Project>

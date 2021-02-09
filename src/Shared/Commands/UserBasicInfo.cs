@@ -1,3 +1,4 @@
+using Shipping.Shared.Dto;
 using System;
 using MediatR;
 using AutoMapper;
@@ -10,10 +11,8 @@ using FluentValidation;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Shipping.Domain.Entities;
-using Shipping.Domain.Enums;
-using eServices.Shared;
 
-namespace Shared.Commands
+namespace Shipping.Shared.Commands
 {
     public class UserBasicInfo:IMapFrom<User>
     {
@@ -21,11 +20,16 @@ namespace Shared.Commands
         public string SId { get; set; }
         [DisplayName("المعرف")]
         public int Id { get; set; }
-        [DisplayName("الاسم بالعربي")]
+        [DisplayName("الإسم بالعربي")]
         public string NameAr { get; set; }
-        [DisplayName("الاسم بالانجليزي")]
+        [DisplayName("الإسم بالانجليزي")]
         public string NameEn { get; set; }
-        public UserType Type { get; set; }
+        [DisplayName("النوع")]
+        public int TypeId { get; set; }
+        [DisplayName("النوع")]
+        public string TypeName { get; set; }
+
+
     }
 
 }
