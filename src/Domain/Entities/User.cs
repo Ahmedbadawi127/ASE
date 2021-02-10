@@ -30,10 +30,22 @@ namespace Shipping.Domain.Entities
         [MaxLength(120)]
         public string NameEn { get; set; }
         [Required]
-        public int TypeId { get; set; }
+        public int UserTypeId { get; set; }
         [Required]
         [MaxLength(25)]
         public string TypeName { get; set; }
+        [MaxLength(25)]
+        public string Phone { get; set; }
+        [MaxLength(150)]
+        public string Address { get; set; }
+        public int StateId { get; set; }
+        [MaxLength(25)]
+         public string StateName { get; set; }
+        public int RegionId { get; set; }
+        [MaxLength(25)]
+        public string RegionName { get; set; }
+
+
 
         //public List<DesignatationCutDecisionRequest> DesignatationCutDecisionRequests  {get; set;}
 

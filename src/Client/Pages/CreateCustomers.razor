@@ -1,94 +1,51 @@
 ﻿@page "/createcustomers"
 @inject Microsoft.AspNetCore.Components.NavigationManager Navigation
 
-@*<EditForm Model="@FModel" OnValidSubmit="SubmitClick">
+<EditForm Model="@FModel" OnValidSubmit="SubmitClick">
     <FluentValidator></FluentValidator>
     <ValidationSummary />
 
-
-
     <div class="row">
         <div class="form-group col-md-6">
-            <label for="ProcessTypeRequest">نوع العمليه</label>
-            <select id="ProcessTypeRequest" class="form-control selectpicker" value="@FModel.ProcessTypeRequestFM" @onchange="ProcessTypeRequestChange">
-                @if (ProcessTypeRequestListData != null)
-                {
-                    <option> اختر نوع العمليه</option>
-                    foreach (var item in ProcessTypeRequestListData)
-                    {
-                        <option value="@item.Id">@item.Display_name</option>
-                    }
-                }
-            </select>
-            <ValidationMessage For="()=>FModel.ProcessTypeRequest"></ValidationMessage>
-
+            <label for="NameAr">الاسم بالعربي</label>
+            <InputText id="NameAr" class="form-control" @bind-Value="FModel.NameAr"></InputText>
+            <ValidationMessage For="() => FModel.NameAr"></ValidationMessage>
         </div>
         <div class="form-group col-md-6">
-            <label for="ProcessNumber">رقم العملية</label>
-            <InputText id="ProcessNumber" class="form-control" @bind-Value="FModel.ProcessNumber"></InputText>
-            <ValidationMessage For="() => FModel.ProcessNumber"></ValidationMessage>
+            <label for="NameEn">الاسم بالانجليزي</label>
+            <InputText id="NameEn" class="form-control" @bind-Value="FModel.NameEn"></InputText>
+            <ValidationMessage For="() => FModel.NameEn"></ValidationMessage>
         </div>
     </div>
-
     <div class="row">
         <div class="form-group col-md-6">
-            <label for="Name">إسم العملية</label>
-            <InputText id="Name" class="form-control" @bind-Value="FModel.Name"></InputText>
-
+            <SfTextBox Multiline=true FloatLabelType="@FloatLabelType.Auto" Placeholder="ادخل العنوان" @bind-Value="FModel.Address"></SfTextBox>
+            <ValidationMessage For="() => FModel.Address"></ValidationMessage>
         </div>
         <div class="form-group col-md-6">
-            <label for="ProcessDate">تاريخ العملية</label>
-            <div class="row" id="ProcessDate">
-                <div class="col-6">
-                    <InputDate TValue="DateTime" @bind-Value="@FModel.ProcessDate"></InputDate>
-                </div>
-                <div class="col-6">
-                    <SfDatePicker TValue="DateTime" @bind-Value="@FModel.ProcessDate" EnableRtl="true" Placeholder='تقويم ام القرى'></SfDatePicker>
-                </div>
-            </div>
-
+            <label for="Phone">التليفون</label>
+            <InputText id="Phone" class="form-control" @bind-Value="FModel.Phone"></InputText>
+            <ValidationMessage For="() => FModel.Phone"></ValidationMessage>
         </div>
     </div>
-
     <div class="row">
         <div class="form-group col-md-6">
-            <label for="BudgetAdminUnitId">الوحدات الإداريه</label>
-            <select id="BudgetAdminUnitId" class="form-control selectpicker" value="@FModel.BudgetAdminUnitIdFM" @onchange="BudgetAdminUnitIdChange">
-                @if (BudgetAdminUnitIdListData != null)
-                {
-                    <option> اختر الوحدات الإداريه</option>
-                    foreach (var item in BudgetAdminUnitIdListData)
-                    {
-                        <option value="@item.Id">@item.Display_name</option>
-                    }
-                }
-            </select>
-            <ValidationMessage For="()=>FModel.BudgetAdminUnitId"></ValidationMessage>
-
+            <label asp-for="Ingredients" class="control-label">المحافظه</label>
+            <SfDropDownList TValue="int?" @bind-Value="@FModel.StateIdFM" TItem="LookupDto" Placeholder="اختر المحافظه">
+                <SfDataManager Url="api/Lookups/GetLookups/AllStates" Adaptor="Syncfusion.Blazor.Adaptors.WebApiAdaptor" CrossDomain=true></SfDataManager>
+                <DropDownListFieldSettings Text="DisplayName" Value="Id"></DropDownListFieldSettings>
+            </SfDropDownList>
+            <ValidationMessage For="() => FModel.StateId"></ValidationMessage>
         </div>
         <div class="form-group col-md-6">
-            <label for="BeneficiaryUnitId">الجهة المستفيدة</label>
-            <select id="BeneficiaryUnitId" class="form-control selectpicker" value="@FModel.BeneficiaryUnitIdFM" @onchange="BeneficiaryUnitIdChange">
-                @if (BeneficiaryUnitIdListData != null)
-                {
-                    <option> اختر الجهة المستفيدة</option>
-                    foreach (var item in BeneficiaryUnitIdListData)
-                    {
-                        <option value="@item.Id">@item.Display_name</option>
-                    }
-                }
-            </select>
-            <ValidationMessage For="()=>FModel.BeneficiaryUnitId"></ValidationMessage>
-
+            <label asp-for="Ingredients" class="control-label">المدينه</label>
+            <SfDropDownList TValue="int?" @bind-Value="@FModel.CityIdFM" TItem="LookupDto" Placeholder="اختر المدينه">
+                <SfDataManager Url="api/Lookups/GetLookups/AllCities" Adaptor="Syncfusion.Blazor.Adaptors.WebApiAdaptor" CrossDomain=true></SfDataManager>
+                <DropDownListFieldSettings Text="DisplayName" Value="Id"></DropDownListFieldSettings>
+            </SfDropDownList>
+            <ValidationMessage For="() => FModel.CityId"></ValidationMessage>
         </div>
     </div>
-
-    <div class="form-group col-md-6">
-        <label for="InitialAmount">مبلغ الطلب</label>
-        <InputNumber id="InitialAmount" class="form-control" @bind-Value="FModel.InitialAmount"></InputNumber>
-
-    </div>
-
 
 
     <div class="form-group">
@@ -104,115 +61,36 @@
     public EventCallback OnCancel { get; set; }
     [Parameter]
     public EventCallback<string> OnSuccess { get; set; }
-    BudgetFlowCreateBudgetRequestFM FModel { get; set; }
+    CreateCustomersFM FModel { get; set; }
     bool Disabled { get; set; }
-    public List<LookupDto> ProcessTypeRequestListData { get; set; }
-
-    public async void ProcessTypeRequestChange(Microsoft.AspNetCore.Components.ChangeEventArgs args)
-    {
-        var Val = 0;
-        int.TryParse(args?.Value?.ToString(), out Val);
-        if (Val > 0)
-        {
-            FModel.ProcessTypeRequestFM = Val;
-            var lData = ProcessTypeRequestListData.Single(v => v.Id == Val);
-            FModel.ProcessTypeRequestName = lData.Display_name;
-
-
-        }
-        else
-        {
-            FModel.ProcessTypeRequestFM = null;
-            FModel.ProcessTypeRequestName = null;
-
-
-        }
-        StateHasChanged();
-    }
 
 
 
-
-    public List<LookupDto> BudgetAdminUnitIdListData { get; set; }
-    public async void BudgetAdminUnitIdChange(Microsoft.AspNetCore.Components.ChangeEventArgs args)
-    {
-        var Val = 0;
-        int.TryParse(args?.Value?.ToString(), out Val);
-        if (Val > 0)
-        {
-            FModel.BudgetAdminUnitIdFM = Val;
-            var lData = BudgetAdminUnitIdListData.Single(v => v.Id == Val);
-            FModel.BudgetAdminUnitName = lData.Display_name;
-
-
-        }
-        else
-        {
-            FModel.BudgetAdminUnitIdFM = null;
-            FModel.BudgetAdminUnitName = null;
-
-
-        }
-        StateHasChanged();
-    }
-
-    public List<LookupDto> BeneficiaryUnitIdListData { get; set; }
-    public async void BeneficiaryUnitIdChange(Microsoft.AspNetCore.Components.ChangeEventArgs args)
-    {
-        var Val = 0;
-        int.TryParse(args?.Value?.ToString(), out Val);
-        if (Val > 0)
-        {
-            FModel.BeneficiaryUnitIdFM = Val;
-            var lData = BeneficiaryUnitIdListData.Single(v => v.Id == Val);
-            FModel.BeneficiaryUnitName = lData.Display_name;
-
-
-        }
-        else
-        {
-            FModel.BeneficiaryUnitIdFM = null;
-            FModel.BeneficiaryUnitName = null;
-
-
-        }
-        StateHasChanged();
-    }
 
 
     protected override async Task OnInitializedAsync()
     {
         Disabled = false;
-        var User = await umAlQuraOperations.GetLoggedInUser(Http);
-        FModel = new BudgetFlowCreateBudgetRequestFM
+        //var User = await umAlQuraOperations.GetLoggedInUser(Http);
+        FModel = new CreateCustomersFM
         {
-            User = User,
         };
-
-
-
-
-
-
-
-
-
-
-        ProcessTypeRequestListData = await Http.GetFromJsonAsync<List<LookupDto>>("api/Lookups/GetLookups/process_request_types");
-        BudgetAdminUnitIdListData = await Http.GetFromJsonAsync<List<LookupDto>>("api/Lookups/GetLookups/all_departments");
-        BeneficiaryUnitIdListData = await Http.GetFromJsonAsync<List<LookupDto>>("api/Lookups/GetLookups/all_departments");
     }
+
+
+
 
     public async Task Cancel_Click()
     {
         await OnCancel.InvokeAsync(null);
     }
+
     protected async Task SubmitClick()
     {
         try
         {
             Disabled = true;
-            var response = await Http.PostAsJsonAsync<BudgetFlowCreateBudgetRequestCommand>("api/BFlowCreateActions/BudgetFlowCreateBudgetRequest", FModel);
+            @*var response = await Http.PostAsJsonAsync<BudgetFlowCreateBudgetRequestCommand>("api/BFlowCreateActions/BudgetFlowCreateBudgetRequest", FModel);
             if (!response.IsSuccessStatusCode)
             {
                 Disabled = false;
@@ -228,14 +106,14 @@
             {
                 Disabled = false;
                 Navigation.NavigateTo($"/BudgetFlow/My/{fid}");
-            }
+            }*@
         }
         catch (Exception ex)
         {
-            await umAlQuraOperations.ShowToast("رساله خطأ من النظام", ex.Message, "error");
+            //await umAlQuraOperations.ShowToast("رساله خطأ من النظام", ex.Message, "error");
         }
     }
-}*@
+}
 
 
 
