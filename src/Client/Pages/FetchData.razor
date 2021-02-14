@@ -1,58 +1,52 @@
 @page "/fetchdata"
-@inject HttpClient Http
 
-<h1>Weather forecast</h1>
+@using Syncfusion.Blazor.Calendars
+@using System.ComponentModel.DataAnnotations;
+@using FluentValidation
 
-<p>This component demonstrates fetching data from the server.</p>
 
+<EditForm Model="annotation" OnValidSubmit="SaveCustomer">
+    <FluentValidator Validator="custVal" />
 
-@if (forecasts == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+    <h3>Your name</h3>
+    <InputDate ID='DatePick' TValue="DateTime?" @bind-Value="@annotation.date" Width="250px"></InputDate>
+    <ValidationMessage For="@(() => annotation.date)" />
+
+    <p><button type="submit">Submit</button></p>
+</EditForm>
 
 @code {
-    private WeatherForecast[] forecasts;
 
-    protected override async Task OnInitializedAsync()
+
+    private Annotation annotation = new Annotation();
+
+    CustomerValidator custVal = new CustomerValidator();
+    public class CustomerValidator : AbstractValidator<Annotation>
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+        public CustomerValidator()
+        {
+            RuleFor(customer => customer.date).NotEmpty();
+
+        }
+    }
+    void SaveCustomer()
+    {
+        Console.WriteLine("TODO: Actually do something with the valid data");
+
     }
 
-    public class WeatherForecast
+    public class Annotation
     {
-        public DateTime Date { get; set; }
+        [Required]
+        public DateTime? date { get; set; } = null;
+        [Required]
+        public Object dateRange { get; set; } = null;
 
-        public int TemperatureC { get; set; }
+        [Required]
+        public DateTime? startDate { get; set; } = null;
 
-        public string Summary { get; set; }
-
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+        [Required]
+        public DateTime? EndDate { get; set; } = null;
     }
-
 
 }

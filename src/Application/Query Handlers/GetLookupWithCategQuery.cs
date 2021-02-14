@@ -14,23 +14,24 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Shipping.Application.Lookups
 {
-    public class GetLookupQuery : IRequest<List<LookupDto>>
+    public class GetLookupWithCategQuery : IRequest<List<LookupWithCategDto>>
     {
         public string LoggedInUser { get; set; }
         public string DataKey { get; set; }
         public string Id { get; set; }
         public int UserTypeId { get; set; }
+        public int CategoryId { get; set; }
         public string Search { get; set; }
         public int Take { get; set; }
         public int Skip { get; set; }
     }
-    public class GetLookupQueryHandler : IRequestHandler<GetLookupQuery, List<LookupDto>>
+    public class GetLookupWithCategQueryHandler : IRequestHandler<GetLookupWithCategQuery, List<LookupWithCategDto>>
     {
         private readonly IMapper _mapper;
         private readonly ILookupService _lookupService;
         private readonly IMemoryCache _cache;
 
-        public GetLookupQueryHandler(IMemoryCache cache, IMapper mapper, ILookupService lookupService)
+        public GetLookupWithCategQueryHandler(IMemoryCache cache, IMapper mapper, ILookupService lookupService)
         {
             _lookupService = lookupService;
             _mapper = mapper;
@@ -38,15 +39,16 @@ namespace Shipping.Application.Lookups
 
         }
 
-        public async Task<List<LookupDto>> Handle(GetLookupQuery request, CancellationToken cancellationToken)
+        public async Task<List<LookupWithCategDto>> Handle(GetLookupWithCategQuery request, CancellationToken cancellationToken)
         {
-            return await _lookupService.GetLookups
+            return await _lookupService.GetLookupsWithCateg
                 (
                 Key: request.DataKey
                 ,Id: request.Id
                 ,Search: request.Search
                 ,UserTypeId: request.UserTypeId
-                ,LoggedInUser: request.LoggedInUser
+                , CategoryId: request.CategoryId
+                , LoggedInUser: request.LoggedInUser
                 , Take:request.Take
                 ,Skip:request.Skip
                 , cancellationToken: cancellationToken);

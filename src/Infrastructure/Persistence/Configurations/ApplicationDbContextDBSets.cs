@@ -15,7 +15,9 @@ namespace Shipping.Infrastructure.Persistence
     public partial class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, IApplicationDbContext
     {
 
-        public DbSet<User> User { get; set; }
+        //public DbSet<User> User { get; set; }
+        public DbSet<Customer> Customers { get; set; }
 
-	}
+
+    }
 }

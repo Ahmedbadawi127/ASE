@@ -7,7 +7,9 @@ namespace Shipping.Application.Common.Interfaces
 {
     public partial interface IApplicationDbContext
     {
-        DbSet<User> User { get; set; }
+        //DbSet<User> User { get; set; }
+        DbSet<Customer> Customers { get; set; }
+
 
     }
 }

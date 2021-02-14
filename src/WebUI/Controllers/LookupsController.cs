@@ -29,7 +29,23 @@ namespace Shipping.WebUI.Controllers
             return result;
 
         }
-        
+
+        [HttpGet("[action]/{DataKey}")]
+        public async Task<List<LookupWithCategDto>> GetLookupsWithCateg(string DataKey, [FromQuery] int UserTypeId, [FromQuery] int CategoryId, [FromQuery] string Search, [FromQuery] int Take, [FromQuery] int Skip)
+        {
+            var result = await Mediator.Send(new GetLookupWithCategQuery()
+            {
+                LoggedInUser = User.Identity.Name,
+                DataKey = DataKey,
+                UserTypeId = UserTypeId,
+                CategoryId = CategoryId,
+                Search = Search,
+                Take = Take,
+                Skip = Skip,
+            });
+            return result;
+
+        }
 
     }
 }

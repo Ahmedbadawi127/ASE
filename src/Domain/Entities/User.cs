@@ -14,15 +14,14 @@ namespace Shipping.Domain.Entities
         public User()
         {
 
-//DesignatationCutDecisionRequests = new  List<DesignatationCutDecisionRequest>();
+            //Customers = new  List<Customer>();
 
 	    }
 
-        [Required]
         public int Id { get; set; }
         [Required]
         [MaxLength(128)]
-        public string SId { get; set; }
+        public Guid SId { get; set; }
         [Required]
         [MaxLength(120)]
         public string NameAr { get; set; }
@@ -31,23 +30,12 @@ namespace Shipping.Domain.Entities
         public string NameEn { get; set; }
         [Required]
         public int UserTypeId { get; set; }
-        [Required]
-        [MaxLength(25)]
-        public string TypeName { get; set; }
-        [MaxLength(25)]
-        public string Phone { get; set; }
-        [MaxLength(150)]
-        public string Address { get; set; }
-        public int StateId { get; set; }
-        [MaxLength(25)]
-         public string StateName { get; set; }
-        public int RegionId { get; set; }
-        [MaxLength(25)]
-        public string RegionName { get; set; }
-
-
-
-        //public List<DesignatationCutDecisionRequest> DesignatationCutDecisionRequests  {get; set;}
+     
+        
+        
+        
+        
+        //public List<Customer> Customers  {get; set;}
 
 
     }

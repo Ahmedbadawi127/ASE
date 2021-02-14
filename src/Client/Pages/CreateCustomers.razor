@@ -1,8 +1,13 @@
 ﻿@page "/createcustomers"
 @inject Microsoft.AspNetCore.Components.NavigationManager Navigation
+@using FluentValidation;
+@using FluentValidation.Validators
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+
 
 <EditForm Model="@FModel" OnValidSubmit="SubmitClick">
-    <FluentValidator></FluentValidator>
+    <FluentValidator Validator="custVal" />
     <ValidationSummary />
 
     <div class="row">
@@ -19,6 +24,24 @@
     </div>
     <div class="row">
         <div class="form-group col-md-6">
+            <label asp-for="Ingredients" class="control-label">الجنس</label>
+
+            <SfDropDownList id="State" @ref="refGender" Enabled="@(GenderQuery != null)" AllowFiltering="true" TValue="int?" TItem="LookupDto" @bind-Value="FModel.GenderIdFM"
+                            Placeholder="اختر الجنس" Query="@StateQuery">
+                <DropDownListEvents TValue="int?" TItem="LookupDto" ValueChange="GenderChange"></DropDownListEvents>
+                <SfDataManager Url="api/Lookups/GetLookups/Genders" Adaptor="Syncfusion.Blazor.Adaptors.WebApiAdaptor" CrossDomain="true"></SfDataManager>
+                <DropDownListFieldSettings Text="DisplayName" Value="Id"></DropDownListFieldSettings>
+            </SfDropDownList>
+            <ValidationMessage For="() => FModel.GenderId"></ValidationMessage>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="Age">السن</label>
+            <InputNumber id="Age" class="form-control" @bind-Value="FModel.Age"></InputNumber>
+            <ValidationMessage For="() => FModel.Age"></ValidationMessage>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
             <SfTextBox Multiline=true FloatLabelType="@FloatLabelType.Auto" Placeholder="ادخل العنوان" @bind-Value="FModel.Address"></SfTextBox>
             <ValidationMessage For="() => FModel.Address"></ValidationMessage>
         </div>
@@ -31,16 +54,22 @@
     <div class="row">
         <div class="form-group col-md-6">
             <label asp-for="Ingredients" class="control-label">المحافظه</label>
-            <SfDropDownList TValue="int?" @bind-Value="@FModel.StateIdFM" TItem="LookupDto" Placeholder="اختر المحافظه">
-                <SfDataManager Url="api/Lookups/GetLookups/AllStates" Adaptor="Syncfusion.Blazor.Adaptors.WebApiAdaptor" CrossDomain=true></SfDataManager>
+            <SfDropDownList id="State" @ref="refState" Enabled="@(StateQuery != null)" AllowFiltering="true" TValue="int?" TItem="LookupDto" @bind-Value="FModel.StateIdFM"
+                            Placeholder="اختر المحافظه" Query="@StateQuery">
+                <DropDownListEvents TValue="int?" TItem="LookupDto" Filtering="StateFiltering" ValueChange="StateChange"></DropDownListEvents>
+                <SfDataManager Url="api/Lookups/GetLookups/AllStates" Adaptor="Syncfusion.Blazor.Adaptors.WebApiAdaptor" CrossDomain="true"></SfDataManager>
                 <DropDownListFieldSettings Text="DisplayName" Value="Id"></DropDownListFieldSettings>
             </SfDropDownList>
             <ValidationMessage For="() => FModel.StateId"></ValidationMessage>
         </div>
+
+
         <div class="form-group col-md-6">
             <label asp-for="Ingredients" class="control-label">المدينه</label>
-            <SfDropDownList TValue="int?" @bind-Value="@FModel.CityIdFM" TItem="LookupDto" Placeholder="اختر المدينه">
-                <SfDataManager Url="api/Lookups/GetLookups/AllCities" Adaptor="Syncfusion.Blazor.Adaptors.WebApiAdaptor" CrossDomain=true></SfDataManager>
+            <SfDropDownList id="City" @ref="refCity" Enabled="@(CityQuery != null)" AllowFiltering="true" TValue="int?" TItem="LookupWithCategDto" @bind-Value="FModel.CityIdFM"
+                            Placeholder="اختر المدينه" Query="@CityQuery">
+                <DropDownListEvents TValue="int?" TItem="LookupWithCategDto" Filtering="CityFiltering" ValueChange="CityChange"></DropDownListEvents>
+                <SfDataManager Url="api/Lookups/GetLookupsWithCateg/AllCities" Adaptor="Syncfusion.Blazor.Adaptors.WebApiAdaptor" CrossDomain="true"></SfDataManager>
                 <DropDownListFieldSettings Text="DisplayName" Value="Id"></DropDownListFieldSettings>
             </SfDropDownList>
             <ValidationMessage For="() => FModel.CityId"></ValidationMessage>
@@ -63,18 +92,91 @@
     public EventCallback<string> OnSuccess { get; set; }
     CreateCustomersFM FModel { get; set; }
     bool Disabled { get; set; }
+    public SfDropDownList<int?, LookupDto> refState { get; set; }
+    public Query StateQuery { get; set; } = null;
+    public SfDropDownList<int?, LookupWithCategDto> refCity { get; set; }
+    public Query CityQuery { get; set; } = null;
+    public SfDropDownList<int?, LookupDto> refGender { get; set; }
+    public Query GenderQuery { get; set; } = null;
+
+    CreateCustomersCommandValidator custVal = new CreateCustomersCommandValidator();
 
 
+    public async void GenderChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int?, LookupDto> args)
+    {
+        var Val = args.ItemData.Id;
+        if (Val != 0)
+        {
+            var lData = args.ItemData;
+            FModel.GenderName = lData.DisplayName;
+        }
+        else
+        {
+            FModel.GenderName = null;
+        }
+        StateHasChanged();
+    }
 
+
+    public async void StateChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int?, LookupDto> args)
+    {
+        var Val = args.ItemData.Id;
+        if (Val != 0)
+        {
+            var lData = args.ItemData;
+            FModel.StateName = lData.DisplayName;
+            FModel.CityName = null;
+            this.CityQuery = new Query().AddParams("Take", 6).AddParams("CategoryId", Val);
+        }
+        else
+        {
+            FModel.StateName = null;
+        }
+        StateHasChanged();
+    }
+
+    private void StateFiltering(Syncfusion.Blazor.DropDowns.FilteringEventArgs args)
+    {
+        this.StateQuery = new Query().AddParams("Search", args.Text).AddParams("Take", 6);
+
+        StateHasChanged();
+    }
+
+    public async void CityChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int?, LookupWithCategDto> args)
+    {
+        var Val = args.ItemData.Id;
+        if (Val != 0)
+        {
+            var lData = args.ItemData;
+            FModel.CityName = lData.DisplayName;
+        }
+        else
+        {
+            FModel.CityName = null;
+        }
+        StateHasChanged();
+    }
+
+    private void CityFiltering(Syncfusion.Blazor.DropDowns.FilteringEventArgs args)
+    {
+        this.CityQuery = new Query().AddParams("Search", args.Text).AddParams("Take", 6);
+
+        StateHasChanged();
+    }
 
 
     protected override async Task OnInitializedAsync()
     {
         Disabled = false;
-        //var User = await umAlQuraOperations.GetLoggedInUser(Http);
+
         FModel = new CreateCustomersFM
         {
+
         };
+
+        this.StateQuery = new Query().AddParams("Take", 6);
+        this.GenderQuery = new Query();
+
     }
 
 
@@ -90,7 +192,7 @@
         try
         {
             Disabled = true;
-            @*var response = await Http.PostAsJsonAsync<BudgetFlowCreateBudgetRequestCommand>("api/BFlowCreateActions/BudgetFlowCreateBudgetRequest", FModel);
+            var response = await Http.PostAsJsonAsync<CreateCustomersCommand>("api/Post/CreateCustomer", FModel);
             if (!response.IsSuccessStatusCode)
             {
                 Disabled = false;
@@ -105,8 +207,8 @@
             else
             {
                 Disabled = false;
-                Navigation.NavigateTo($"/BudgetFlow/My/{fid}");
-            }*@
+                Navigation.NavigateTo($"/");
+            }
         }
         catch (Exception ex)
         {
