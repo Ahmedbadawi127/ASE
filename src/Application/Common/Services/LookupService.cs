@@ -82,10 +82,12 @@ namespace Shipping.Application.Lookups
                 return items.ToList();
             }
 
+
+
             return null;
         }
-            public async Task<List<LookupWithCategDto>> GetLookupsWithCateg(string Key, string Id = null, int UserTypeId = 0, int CategoryId = 0, string LoggedInUser = null, string Search = null, int Take = 0, int Skip = 0, CancellationToken cancellationToken = new CancellationToken())
-            {
+        public async Task<List<LookupWithCategDto>> GetLookupsWithCateg(string Key, string Id = null, int UserTypeId = 0, int CategoryId = 0, string LoggedInUser = null, string Search = null, int Take = 0, int Skip = 0, CancellationToken cancellationToken = new CancellationToken())
+        {
 
             if (Key.Equals("AllCities", StringComparison.OrdinalIgnoreCase))
             {
@@ -119,7 +121,7 @@ namespace Shipping.Application.Lookups
             }
 
             return null;
-        } 
+        }
 
     }
 }
