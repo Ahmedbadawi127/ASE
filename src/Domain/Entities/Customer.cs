@@ -16,6 +16,7 @@ namespace Shipping.Domain.Entities
 
 	    }
 
+        [Key]
         public int Id { get; set; }
         //[Required]
         //public int UserId { get; set; }
@@ -44,6 +45,9 @@ namespace Shipping.Domain.Entities
         [MaxLength(25)]
         public string CityName { get; set; }
         //public User User { get; set; }
+
+        public List<Shipment> Shipments { get; set; }
+
 
     }
 }

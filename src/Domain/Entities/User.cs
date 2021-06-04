@@ -30,11 +30,11 @@ namespace Shipping.Domain.Entities
         public string NameEn { get; set; }
         [Required]
         public int UserTypeId { get; set; }
-     
-        
-        
-        
-        
+
+
+
+
+
         //public List<Customer> Customers  {get; set;}
 
 

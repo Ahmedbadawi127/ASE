@@ -23,9 +23,8 @@ namespace Shipping.Shared.Commands
 
     public class CreateShipmentsCommand : IRequest<int>
     {
-        public int? ShipmentId { get; set; }
         public string ShipmentName { get; set; }
-        public int? CustomerId { get; set; }
+        public int CustomerId { get; set; }
         public string CustomerName { get; set; }
         public string ReceiverName { get; set; }
         public string ReceiverPhone { get; set; }
