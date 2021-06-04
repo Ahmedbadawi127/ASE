@@ -1,0 +1,52 @@
+﻿@page "/pdf"
+@using Syncfusion.Pdf;
+@using Syncfusion.Pdf.Graphics;
+@using System.IO;
+@inject Microsoft.JSInterop.IJSRuntime JS
+@using System.Threading.Tasks
+@inject IJSRuntime JSRuntime
+
+<h3>pdf</h3>
+
+<button class="btn btn-primary" @onclick="@CreatePDF">Create PDF</button>
+
+
+
+@code {
+
+
+
+    async void CreatePDF()
+    {
+        await JSRuntime.InvokeAsync<string>(
+            "MyClass.myMethod", null
+            );
+
+        //Create a new PDF document
+        PdfDocument document = new PdfDocument();
+
+        //Add a page to the document
+        PdfPage page = document.Pages.Add();
+
+        //Create PDF graphics for the page
+        PdfGraphics graphics = page.Graphics;
+
+        //Set the standard font
+        PdfFont font = new PdfStandardFont(PdfFontFamily.Helvetica, 20);
+
+        //Draw the text
+        graphics.DrawString("Hello World!", font, PdfBrushes.Black, new Syncfusion.Drawing.PointF(0, 0));
+
+        //Saving the PDF to the MemoryStream
+        MemoryStream stream = new MemoryStream();
+
+        document.Save(stream);
+
+        document.Close(true);
+
+        //Download the PDF in the browser.
+        JS.SaveAs("Sample.pdf", stream.ToArray());
+
+    }
+
+}
