@@ -20,6 +20,7 @@ using System;
 using System.Text;
 using Microsoft.AspNetCore.HttpOverrides;
 using Shipping.WebUI.Services;
+using Syncfusion.Blazor;
 
 namespace Shipping.WebUI
 {
@@ -71,7 +72,7 @@ namespace Shipping.WebUI
             });
 
             //services.AddHttpClient<EmployeeServiceAPI>();
- 
+
 
             services.AddOpenApiDocument(configure =>
             {
@@ -86,14 +87,17 @@ namespace Shipping.WebUI
 
                 configure.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
             });
+
+            services.AddSyncfusionBlazor();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-         
+
             app.UseExceptionHandler("/Error");
-           
+
             var HostHTTPOptionsSection = Configuration.GetSection("HostHTTPOptions");
 
             var UseForwardedHeaders = bool.Parse(HostHTTPOptionsSection?.GetSection("UseForwardedHeaders")?.Value ?? "false");

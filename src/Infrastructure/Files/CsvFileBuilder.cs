@@ -16,8 +16,9 @@ namespace Shipping.Infrastructure.Files
             using (var streamWriter = new StreamWriter(memoryStream))
             {
                 using var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture);
+                csvWriter.Context.RegisterClassMap<TodoItemRecordMap>();
+                //csvWriter.Configuration.RegisterClassMap<TodoItemRecordMap>();
 
-                csvWriter.Configuration.RegisterClassMap<TodoItemRecordMap>();
                 csvWriter.WriteRecords(records);
             }
 
