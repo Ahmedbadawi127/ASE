@@ -50,3 +50,11 @@ a, .btn-link {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.e-dropdownlist {
+    padding: 2px 10px 0px 0px !important;
+}
+
+.e-float-text {
+    padding: 2px 10px 0px 0px !important;
+}

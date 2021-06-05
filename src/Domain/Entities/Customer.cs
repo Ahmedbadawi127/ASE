@@ -13,13 +13,12 @@ namespace Shipping.Domain.Entities
     {
         public Customer()
         {
+            Shipments = new List<Shipment>();
 
-	    }
+        }
 
         [Key]
         public int Id { get; set; }
-        //[Required]
-        //public int UserId { get; set; }
         [Required]
         [MaxLength(128)]
         public Guid SId { get; set; }

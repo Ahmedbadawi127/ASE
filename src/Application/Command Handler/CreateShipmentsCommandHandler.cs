@@ -43,7 +43,7 @@ namespace Shipping.Application.CreateFlowCommands
 
             var entity = new Shipment
             {
-                Name = request.ShipmentName,
+                Name = request.ShipmentName??"",
                 ReceiverCityId = request.ReceiverCityId,
                 ReceiverCityName = request.ReceiverCityName,
                 ReceiverStateId = request.ReceiverStateId,
@@ -60,12 +60,13 @@ namespace Shipping.Application.CreateFlowCommands
             {
                 customer.Shipments.Add(entity);
                 await _context.SaveChangesAsync(cancellationToken);
-                return entity.CashToBeCollected;
+                return entity.Id;
 
             }
             catch (Exception e)
             {
                 customer.Shipments.Remove(entity);
+                await _context.SaveChangesAsync(cancellationToken);
                 throw e;
             }
 

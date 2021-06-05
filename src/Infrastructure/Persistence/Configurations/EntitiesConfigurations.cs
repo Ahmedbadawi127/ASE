@@ -28,7 +28,7 @@ namespace Shipping.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Shipment> builder)
         {
-
+            // Method intentionally left empty.
         }
     }
 
