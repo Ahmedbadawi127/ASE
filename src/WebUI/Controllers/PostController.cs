@@ -17,11 +17,14 @@ namespace Shipping.WebUI.Controllers
         [HttpPost("[action]")]
         public async Task<ActionResult<int>> CreateCustomer(CreateCustomersCommand command)
         {
-            //command.userName = User.Identity.Name;
             return await Mediator.Send(command);
         }
 
-
+        [HttpPost("[action]")]
+        public async Task<ActionResult<int>> CreateShipments(CreateShipmentsCommand command)
+        {
+            return await Mediator.Send(command);
+        }
 
     }
 }

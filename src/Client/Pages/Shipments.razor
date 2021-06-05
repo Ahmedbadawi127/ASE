@@ -11,7 +11,7 @@
     <div class="row">
         <div class="form-group col-md-6">
             <label for="Customer">الراسل</label>
-            <SfDropDownList id="State" @ref="refCustomer" Enabled="@(CustomerQuery != null)" AllowFiltering="true" TValue="int?" TItem="CustomersDto" @bind-Value="FModel.CustomerIdFM"
+            <SfDropDownList id="Customer" @ref="refCustomer" Enabled="@(CustomerQuery != null)" AllowFiltering="true" TValue="int?" TItem="CustomersDto" @bind-Value="FModel.CustomerIdFM"
                             Placeholder="اختر الراسل" Query="@CustomerQuery">
                 <DropDownListEvents TValue="int?" TItem="CustomersDto" Filtering="CustomerFiltering" ValueChange="CustomerChange"></DropDownListEvents>
                 <SfDataManager Url="api/ServerQueries/GetCustomers" Adaptor="Syncfusion.Blazor.Adaptors.WebApiAdaptor" CrossDomain="true"></SfDataManager>
@@ -68,7 +68,7 @@
         </div>
         <div class="form-group col-md-6">
             <label for="Address">مبلغ التحصيل</label>
-            <InputNumber id="Address" class="form-control" @bind-Value="FModel.CashToBeCollected"></InputNumber>
+            <InputNumber id="CashToBeCollected" class="form-control" @bind-Value="FModel.CashToBeCollected"></InputNumber>
         </div>
     </div>
 

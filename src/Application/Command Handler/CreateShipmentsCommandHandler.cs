@@ -60,7 +60,7 @@ namespace Shipping.Application.CreateFlowCommands
             {
                 customer.Shipments.Add(entity);
                 await _context.SaveChangesAsync(cancellationToken);
-                return entity.Id;
+                return entity.CashToBeCollected;
 
             }
             catch (Exception e)
