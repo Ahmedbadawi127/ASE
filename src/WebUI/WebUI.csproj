@@ -1,18 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-	<DisableImplicitComponentsAnalyzers>true</DisableImplicitComponentsAnalyzers>
-	  <RootNamespace>Shipping.WebUI</RootNamespace>
-	  <AssemblyName>Shipping.WebUI</AssemblyName>
-	  <IsPackable>true</IsPackable>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<DisableImplicitComponentsAnalyzers>true</DisableImplicitComponentsAnalyzers>
+		<RootNamespace>Shipping.WebUI</RootNamespace>
+		<AssemblyName>Shipping.WebUI</AssemblyName>
+		<IsPackable>true</IsPackable>
 
-	  <!-- Set this to true if you enable server-side prerendering -->
-	  <BuildServerSideRenderer>false</BuildServerSideRenderer>
-  </PropertyGroup>
+		<!-- Set this to true if you enable server-side prerendering -->
+		<BuildServerSideRenderer>false</BuildServerSideRenderer>
+	</PropertyGroup>
 
-  <ItemGroup>
-   				<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.6" />
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.6" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.6" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.6" />
 		<PackageReference Include="Microsoft.AspNetCore.OData" Version="7.5.8" />
@@ -31,19 +31,19 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 
-  </ItemGroup>
-
-  <ItemGroup>
-		<ProjectReference Include="..\Application\Application.csproj" />
-		<ProjectReference Include="..\Client\Client.csproj" />
-		<ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-		<ProjectReference Include="..\Shared\Shared.csproj" />
-  </ItemGroup>
+	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="wwwroot\assets\css\" />
-	  <Folder Include="wwwroot\assets\fonts\" />
-	  <Folder Include="wwwroot\assets\img\" />
+		<ProjectReference Include="..\Application\Application.csproj" />
+<ProjectReference Include="..\Client\Client.csproj" />
+		<ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+		<ProjectReference Include="..\Shared\Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="wwwroot\assets\css\" />
+		<Folder Include="wwwroot\assets\fonts\" />
+		<Folder Include="wwwroot\assets\img\" />
 	</ItemGroup>
 
 </Project>

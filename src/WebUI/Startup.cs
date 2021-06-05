@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Shipping.Shared.Dto;
 using System;
 using System.Text;
+using Syncfusion.Blazor;
+using Shipping.WebUI;
 
 namespace Shipping.WebUI
 {
@@ -33,7 +35,7 @@ namespace Shipping.WebUI
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-		  services.AddApplication();
+            services.AddApplication();
             services.AddInfrastructure(Configuration);
 
 
@@ -43,8 +45,8 @@ namespace Shipping.WebUI
 
             services.AddHealthChecks()
             .AddDbContextCheck<ApplicationDbContext>();
-        services.AddControllersWithViews(options =>
-                options.Filters.Add(new ApiExceptionFilter()));
+            services.AddControllersWithViews(options =>
+                    options.Filters.Add(new ApiExceptionFilter()));
 
             services.AddMvcCore(options =>
             {
@@ -60,8 +62,8 @@ namespace Shipping.WebUI
             });
 
 
-   services.AddRazorPages();
-  // Customise default API behaviour
+            services.AddRazorPages();
+            // Customise default API behaviour
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
@@ -86,7 +88,7 @@ namespace Shipping.WebUI
             });
 
             services.AddMemoryCache();
-            services.AddRazorPages();
+			services.AddSyncfusionBlazor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -105,6 +107,7 @@ namespace Shipping.WebUI
                 app.UseHsts();
             }
 
+app.UseHealthChecks("/health");
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();

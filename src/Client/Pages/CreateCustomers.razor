@@ -1,9 +1,10 @@
 ﻿@page "/createcustomers"
 @inject Microsoft.AspNetCore.Components.NavigationManager Navigation
 
+
 <EditForm Model="@FModel" OnValidSubmit="SubmitClick">
-    <FluentValidator Validator="custVal" />
-    <ValidationSummary />
+    <FluentValidator></FluentValidator>
+
 
     <div class="row">
         <div class="form-group col-md-6">
@@ -21,7 +22,7 @@
         <div class="form-group col-md-6">
             <label asp-for="Ingredients" class="control-label">الجنس</label>
 
-            <SfDropDownList id="State" @ref="refGender" Enabled="@(GenderQuery != null)" AllowFiltering="true" TValue="int?" TItem="LookupDto" @bind-Value="FModel.GenderIdFM"
+            <SfDropDownList id="Gender" @ref="refGender" Enabled="@(GenderQuery != null)" AllowFiltering="true" TValue="int?" TItem="LookupDto" @bind-Value="FModel.GenderIdFM"
                             Placeholder="اختر الجنس" Query="@StateQuery">
                 <DropDownListEvents TValue="int?" TItem="LookupDto" ValueChange="GenderChange"></DropDownListEvents>
                 <SfDataManager Url="api/Lookups/GetLookups/Genders" Adaptor="Syncfusion.Blazor.Adaptors.WebApiAdaptor" CrossDomain="true"></SfDataManager>

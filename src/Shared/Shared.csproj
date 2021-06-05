@@ -1,22 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-	  <RootNamespace>Shipping.Shared</RootNamespace>
-	  <AssemblyName>Shipping.Shared</AssemblyName>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<RootNamespace>Shipping.Shared</RootNamespace>
+		<AssemblyName>Shipping.Shared</AssemblyName>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="10.1.1" />
-		<PackageReference Include="FluentValidation" Version="10.2.3" />
+		<PackageReference Include="FluentValidation" Version="9.5.4" />
 		<PackageReference Include="MediatR" Version="9.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.6" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="System.Text.Json" Version="5.0.2" />
 	</ItemGroup>
-  <ItemGroup>
-    <SupportedPlatform Include="browser" />
-    <Folder Include="Enums\" />
-    <ProjectReference Include="..\Domain\Domain.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<SupportedPlatform Include="browser" />
+		<Folder Include="Enums\" />
+		<ProjectReference Include="..\Domain\Domain.csproj" />
+	</ItemGroup>
 </Project>
