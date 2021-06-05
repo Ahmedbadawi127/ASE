@@ -1,15 +1,23 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="sidebar">
+<div class="sidebar" style="position:fixed;z-index:1200" >
     <NavMenu />
 </div>
 
 <div class="main">
-    <div class="top-row px-4">
-        مرحبا
+   <div class="top-row px-4" style="z-index:1111;padding-top:0px">
+مرحبا
+
+<CultureSwitcher/>
     </div>
 
     <div class="content px-4">
         @Body
     </div>
 </div>
+<style>
+.sidebar {
+        width: 300px;
+        min-width:300px;
+    }
+</style>

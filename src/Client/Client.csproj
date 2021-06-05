@@ -1,11 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-	  <TargetFramework>net5.0</TargetFramework>
+     <TargetFramework>net5.0</TargetFramework>
+        <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+	<BlazorWebAssemblyEnableLinking>false</BlazorWebAssemblyEnableLinking>
+    <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
   </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Accelist.FluentValidation.Blazor" Version="4.0.0" />
+  <ItemGroup>
+    		<PackageReference Include="Accelist.FluentValidation.Blazor" Version="4.0.0" />
 		<PackageReference Include="FluentValidation" Version="10.2.3" />
 		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.2.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.6" />
@@ -13,12 +16,31 @@
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="5.0.6" />
 		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
-		<PackageReference Include="Syncfusion.Blazor" Version="19.1.0.66" />
+		<PackageReference Include="Syncfusion.Blazor" Version="19.1.0.63" />
 		<PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
-	</ItemGroup>
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Shared\Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\SfResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SfResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\SfResources.resx">
+       <Generator>PublicResXFileCodeGenerator</Generator>
+       <LastGenOutput>SfResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

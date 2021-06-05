@@ -1,7 +1,6 @@
 ﻿@page "/createcustomers"
 @inject Microsoft.AspNetCore.Components.NavigationManager Navigation
 
-
 <EditForm Model="@FModel" OnValidSubmit="SubmitClick">
     <FluentValidator Validator="custVal" />
     <ValidationSummary />

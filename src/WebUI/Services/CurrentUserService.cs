@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
-namespace Shipping.WebUI.Services
+namespace Shipping.WebUI
 {
     public class CurrentUserService : ICurrentUserService
     {
