@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Collections.Generic;
+using Shipping.Domain.Enums;
 
 namespace Shipping.Application.CreateFlowCommands
 {
@@ -33,46 +34,73 @@ namespace Shipping.Application.CreateFlowCommands
         public async Task<int> Handle(CreateCustomersCommand request, CancellationToken cancellationToken)
         {
 
-            var userEntity = new User
-            {
-                SId = Guid.NewGuid(),
-                NameAr = request.NameAr,
-                NameEn = request.NameEn,
-                UserTypeId = 1
-            };
-
-
-            var entity = new Customer
-            {
-                //UserTypeId = 1,
-                // customer = 1, staff = 2
-                NameAr = request.NameAr,
-                NameEn = request.NameEn,
-                Address = request.Address,
-                Phone = request.Phone,
-                StateId = request.StateId,
-                StateName = request.StateName,
-                CityId = request.CityId,
-                CityName = request.CityName,
-                Age = request.Age,
-                GenderId = request.GenderId,
-                GenderName = request.GenderName,
-                SId = Guid.NewGuid(),
-            };
-
             try
             {
+                if (request.Id > 0)
+                {
+                    var c = _context.Customers.First(e => e.Id == request.Id);
 
-                await _context.Customers.AddAsync(entity);
-                await _context.SaveChangesAsync(cancellationToken);
+                    c.NameAr = request.NameAr;
+                    c.NameEn = request.NameEn;
+                    c.Address = request.Address;
+                    c.Phone = request.Phone;
+                    c.StateId = request.StateId;
+                    c.StateName = request.StateName;
+                    c.CityId = request.CityId;
+                    c.CityName = request.CityName;
+                    c.Age = request.Age;
+                    c.GenderId = request.GenderId;
+                    c.GenderName = request.GenderName;
+                    c.SId = Guid.NewGuid();
+                    c.Active = request.Active;
+
+                    await _context.SaveChangesAsync(cancellationToken);
+
+                    return c.Id;
+
+                }
+                else
+                {
+                    //var userEntity = new User
+                    //{
+                    //    SId = Guid.NewGuid(),
+                    //    NameAr = request.NameAr,
+                    //    NameEn = request.NameEn,
+                    //    UserTypeId = (int)UserType.Customer,
+                    //};
+
+                    var entity = new Customer
+                    {
+                        NameAr = request.NameAr,
+                        NameEn = request.NameEn,
+                        Address = request.Address,
+                        Phone = request.Phone,
+                        StateId = request.StateId,
+                        StateName = request.StateName,
+                        CityId = request.CityId,
+                        CityName = request.CityName,
+                        Age = request.Age,
+                        GenderId = request.GenderId,
+                        GenderName = request.GenderName,
+                        SId = Guid.NewGuid(),
+                        Active = request.Active,
+                    };
+
+                    await _context.Customers.AddAsync(entity);
+
+                    await _context.SaveChangesAsync(cancellationToken);
+
+                    return entity.Id;
+                }
 
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-
-                throw e;
+                throw ex;
             }
-            return entity.Id;
+
+
+
 
         }
     }

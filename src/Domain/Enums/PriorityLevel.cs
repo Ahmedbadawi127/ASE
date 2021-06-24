@@ -11,6 +11,6 @@
     {
         Customer = 1,
         Manager,
-        Staff   
+        Staff
     }
 }

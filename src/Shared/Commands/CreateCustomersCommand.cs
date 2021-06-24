@@ -15,22 +15,15 @@ namespace Shipping.Shared.Commands
     {
 
 
-        public int? StateIdFM { get { return (StateId > 0) ? StateId : new Nullable<int>(); } set { StateId = (value ?? 0); } }
-        public int? CityIdFM { get { return (CityId > 0) ? CityId : new Nullable<int>(); } set { CityId = (value ?? 0); } }
-        public int? GenderIdFM { get { return (GenderId > 0) ? GenderId : new Nullable<int>(); } set { GenderId = (value ?? 0); } }
-
-
-        [DisplayName("رقم الهويه")]
-        public string SId { get; set; }
-        [DisplayName("المعرف")]
-        public int Id { get; set; }
-
-
-
     }
 
     public class CreateCustomersCommand : IRequest<int>
     {
+
+        [DisplayName("رقم الهويه")]
+        public Guid SId { get; set; }
+        [DisplayName("المعرف")]
+        public int Id { get; set; }
 
         [DisplayName("المدينه")]
         public string CityName { get; set; }
@@ -56,6 +49,8 @@ namespace Shipping.Shared.Commands
         public string Phone { get; set; }
         [DisplayName("العنوان")]
         public string Address { get; set; }
+        [DisplayName("فعال")]
+        public bool? Active { get; set; }
 
 
     }

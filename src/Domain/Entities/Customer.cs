@@ -32,6 +32,7 @@ namespace Shipping.Domain.Entities
         public int GenderId { get; set; }
         [MaxLength(25)]
         public string GenderName { get; set; }
+        public bool? Active { get; set; }
 
         [MaxLength(25)]
         public string Phone { get; set; }

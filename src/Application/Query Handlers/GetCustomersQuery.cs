@@ -43,6 +43,13 @@ namespace Shipping.Application.Lookups
                     SId = e.SId,
                     NameAr = e.NameAr,
                     NameEn = e.NameEn,
+                    Active = e.Active,
+                    Age = e.Age,
+                    CityName = e.CityName,
+                    GenderName = e.GenderName,
+                    Phone = e.Phone,
+                    StateName = e.StateName,
+                    Address = e.Address
                 }
                 ).ToList();
 
