@@ -34,6 +34,9 @@ namespace Shipping.Domain.Entities
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
 
+        public int DeliveryManId { get; set; }
+        public DeliveryMan DeliveryMan { get; set; }
+
 
     }
 }

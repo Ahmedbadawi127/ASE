@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
+using Shipping.Shared.Extensions;
 
 namespace Shipping.Shared.Commands
 {
@@ -33,9 +34,9 @@ namespace Shipping.Shared.Commands
 
         [DisplayName("المحافظه")]
         public int StateId { get; set; }
-        [DisplayName("الجنس")]
+        [DisplayName("النوع")]
         public int GenderId { get; set; }
-        [DisplayName("الجنس")]
+        [DisplayName("النوع")]
         public string GenderName { get; set; }
         [DisplayName("السن")]
         public int Age { get; set; }
@@ -73,14 +74,14 @@ namespace Shipping.Shared.Commands
         public CreateCustomersCommandValidator()
         {
 
-            RuleFor(v => v.CityId).NotEmpty();
-            RuleFor(v => v.StateId).NotEmpty();
-            RuleFor(v => v.NameAr).NotEmpty();
-            RuleFor(v => v.NameEn).NotEmpty();
-            RuleFor(v => v.Phone).NotEmpty();
-            RuleFor(v => v.Address).NotEmpty();
-            RuleFor(v => v.GenderId).NotEmpty();
-            RuleFor(v => v.Age).NotEmpty();
+            RuleFor(v => v.CityId).NotEmpty().WithName(ReflectionExtensions.GetPropertyDisplayName<CreateCustomersCommand>(i => i.CityId));
+            RuleFor(v => v.StateId).NotEmpty().WithName(ReflectionExtensions.GetPropertyDisplayName<CreateCustomersCommand>(i => i.StateId));
+            RuleFor(v => v.NameAr).NotEmpty().WithName(ReflectionExtensions.GetPropertyDisplayName<CreateCustomersCommand>(i => i.NameAr));
+            RuleFor(v => v.NameEn).NotEmpty().WithName(ReflectionExtensions.GetPropertyDisplayName<CreateCustomersCommand>(i => i.NameEn));
+            RuleFor(v => v.Phone).NotEmpty().WithName(ReflectionExtensions.GetPropertyDisplayName<CreateCustomersCommand>(i => i.Phone));
+            RuleFor(v => v.Address).NotEmpty().WithName(ReflectionExtensions.GetPropertyDisplayName<CreateCustomersCommand>(i => i.Address));
+            RuleFor(v => v.GenderId).NotEmpty().WithName(ReflectionExtensions.GetPropertyDisplayName<CreateCustomersCommand>(i => i.GenderId));
+            RuleFor(v => v.Age).NotEmpty().WithName(ReflectionExtensions.GetPropertyDisplayName<CreateCustomersCommand>(i => i.Age));
 
 
 

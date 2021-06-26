@@ -7,9 +7,11 @@ namespace Shipping.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
+           // builder.HasOne(b => b.DeliveryMan).WithOne(i => i.User)
+           //.HasForeignKey<DeliveryMan>(b => b.UserId);
 
-            //builder.HasMany<Customer>(p => p.Customers).WithOne(c => c.User).HasForeignKey(c => c.UserId).IsRequired(true);
-
+           // builder.HasOne(b => b.Customer).WithOne(i => i.User)
+           //            .HasForeignKey<DeliveryMan>(b => b.UserId);
         }
     }
 
@@ -29,6 +31,14 @@ namespace Shipping.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Shipment> builder)
         {
             // Method intentionally left empty.
+        }
+    }
+
+    public class DeliveryManConfiguration : IEntityTypeConfiguration<DeliveryMan>
+    {
+        public void Configure(EntityTypeBuilder<DeliveryMan> builder)
+        {
+            builder.HasMany(p => p.Shipments).WithOne(c => c.DeliveryMan).HasForeignKey(c => c.DeliveryManId).IsRequired(true);
         }
     }
 

@@ -9,14 +9,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shipping.Domain.Entities
 {
-    public partial class Customer : AuditableEntity
+    public partial class DeliveryMan : AuditableEntity
     {
-        public Customer()
+        public DeliveryMan()
         {
             Shipments = new List<Shipment>();
         }
 
-        [Key]
         public int Id { get; set; }
         [Required]
         [MaxLength(128)]

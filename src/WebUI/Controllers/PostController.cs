@@ -26,5 +26,11 @@ namespace Shipping.WebUI.Controllers
             return await Mediator.Send(command);
         }
 
+        [HttpPost("[action]")]
+        public async Task<ActionResult<int>> CreateDeliveryMan(CreateDeliveryManCommand command)
+        {
+            return await Mediator.Send(command);
+        }
+
     }
 }

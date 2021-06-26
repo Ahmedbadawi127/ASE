@@ -1,10 +1,11 @@
-﻿@page "/create-customer/{Id:int}"
-@page "/create-customer"
+﻿@page "/create-deliveryman/{Id:int}"
+@page "/create-deliveryman"
 @inject Microsoft.AspNetCore.Components.NavigationManager Navigation
 
 @if (FModel != null)
 {
-    <h3>إضافة عميل</h3>
+    <h3>إضافة مندوب</h3>
+
 
     <EditForm Model="@FModel" OnValidSubmit="SubmitClick">
         <FluentValidator></FluentValidator>
@@ -110,7 +111,7 @@
     public EventCallback OnCancel { get; set; }
     [Parameter]
     public EventCallback<string> OnSuccess { get; set; }
-    CreateCustomersFM FModel { get; set; }
+    CreateDeliveryManFM FModel { get; set; }
     bool Disabled { get; set; }
     public SfDropDownList<int, LookupDto> refState { get; set; }
     public Query StateQuery { get; set; } = null;
@@ -118,12 +119,12 @@
     public Query CityQuery { get; set; } = null;
     public SfDropDownList<int, LookupDto> refGender { get; set; }
     public Query GenderQuery { get; set; } = null;
-    public CustomersDto CustomerData { get; set; }
+    public DeliveryManDto DeliveryManData { get; set; }
 
     [Parameter]
     public int Id { get; set; }
 
-    CreateCustomersCommandValidator custVal = new CreateCustomersCommandValidator();
+    CreateDeliveryManCommandValidator custVal = new CreateDeliveryManCommandValidator();
 
 
     public async void GenderChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, LookupDto> args)
@@ -198,30 +199,30 @@
 
         if (Id > 0)
         {
-            var CustomerData = await Http.GetFromJsonAsync<CustomersDto>($"api/ServerQueries/GetCustomerById/{Id}");
+            var DeliveryManData = await Http.GetFromJsonAsync<DeliveryManDto>($"api/ServerQueries/GetDeliveryManById/{Id}");
 
-            FModel = new CreateCustomersFM
+            FModel = new CreateDeliveryManFM
             {
-                Id = CustomerData.Id,
-                Address = CustomerData.Address,
-                Age = CustomerData.Age,
-                CityId = CustomerData.CityId,
-                CityName = CustomerData.CityName,
-                GenderId = CustomerData.GenderId,
-                GenderName = CustomerData.GenderName,
-                NameAr = CustomerData.NameAr,
-                NameEn = CustomerData.NameEn,
-                Phone = CustomerData.Phone,
-                StateId = CustomerData.StateId,
-                StateName = CustomerData.StateName,
-                SId = CustomerData.SId,
-                Active = CustomerData.Active,
+                Id = DeliveryManData.Id,
+                Address = DeliveryManData.Address,
+                Age = DeliveryManData.Age,
+                CityId = DeliveryManData.CityId,
+                CityName = DeliveryManData.CityName,
+                GenderId = DeliveryManData.GenderId,
+                GenderName = DeliveryManData.GenderName,
+                NameAr = DeliveryManData.NameAr,
+                NameEn = DeliveryManData.NameEn,
+                Phone = DeliveryManData.Phone,
+                StateId = DeliveryManData.StateId,
+                StateName = DeliveryManData.StateName,
+                SId = DeliveryManData.SId,
+                Active = DeliveryManData.Active,
             };
 
         }
         else
         {
-            FModel = new CreateCustomersFM
+            FModel = new CreateDeliveryManFM
             {
                 Active = true,
             };
@@ -234,7 +235,7 @@
 
     public async Task Cancel_Click()
     {
-        Navigation.NavigateTo($"/view-customers");
+        Navigation.NavigateTo($"/view-deliveryman");
     }
 
     protected async Task SubmitClick()
@@ -242,7 +243,7 @@
         try
         {
             Disabled = true;
-            var response = await Http.PostAsJsonAsync<CreateCustomersCommand>("api/Post/CreateCustomer", FModel);
+            var response = await Http.PostAsJsonAsync<CreateDeliveryManCommand>("api/Post/CreateDeliveryMan", FModel);
             if (!response.IsSuccessStatusCode)
             {
                 Disabled = false;
@@ -253,7 +254,7 @@
             {
                 Disabled = false;
 
-                Navigation.NavigateTo($"/view-customers");
+                Navigation.NavigateTo($"/view-deliveryman");
 
             }
         }

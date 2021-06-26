@@ -10,7 +10,7 @@ namespace Shipping.Application.Common.Interfaces
     DbSet<TodoList> TodoLists { get; set; }
 
         DbSet<TodoItem> TodoItems { get; set; }
- 
+
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

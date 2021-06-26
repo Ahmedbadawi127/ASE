@@ -1,15 +1,18 @@
-﻿@page "/viewcustomers"
+﻿@page "/view-customers"
 @inject Microsoft.AspNetCore.Components.NavigationManager Navigation
 
 <h3>عرض العملاء</h3>
 
 <div>
 
-    <SfGrid AllowReordering="true" AllowFiltering="true" AllowExcelExport="true" AllowGrouping="true" AllowPdfExport="true"
-            AllowRowDragAndDrop="true" AllowSorting="true" AllowTextWrap="true" Width="100%" AllowPaging="true" TValue="CustomersDto" EnableRtl="true">
+    <SfButton @onclick="Add" CssClass="e-success"> اضافة عميل </SfButton>
+
+    <SfGrid ID="Grid" AllowReordering="true" @ref="Grid" AllowFiltering="true" AllowExcelExport="true" AllowGrouping="true" AllowPdfExport="true"
+            AllowRowDragAndDrop="true" AllowSorting="true" AllowTextWrap="true" Width="100%" AllowPaging="true" TValue="CustomersDto" EnableRtl="true"
+            Toolbar="@(new List<string>() { "ExcelExport", "PdfExport" })">
 
         <GridPageSettings PageSize="20"></GridPageSettings>
-        <GridEvents TValue="CustomersDto" RowSelected="OnRowSelected"></GridEvents>
+        <GridEvents OnToolbarClick="ToolbarClick" TValue="CustomersDto"></GridEvents>
 
         <SfDataManager Url="@($"api/ServerQueries/GetCustomers/")" Adaptor="Adaptors.WebApiAdaptor"></SfDataManager>
         <GridColumns>
@@ -19,7 +22,7 @@
             <GridColumn Field=@(nameof(CustomersDto.Phone)) HeaderText="موبايل"></GridColumn>
             <GridColumn Field=@(nameof(CustomersDto.StateName)) HeaderText="محافظة"></GridColumn>
             <GridColumn Field=@(nameof(CustomersDto.CityName)) HeaderText="مدينة"></GridColumn>
-            <GridColumn Field=@(nameof(CustomersDto.GenderName)) HeaderText="الجنس"></GridColumn>
+            <GridColumn Field=@(nameof(CustomersDto.GenderName)) HeaderText="النوع"></GridColumn>
             <GridColumn Field=@(nameof(CustomersDto.Age)) HeaderText="العمر"></GridColumn>
             <GridColumn Field=@(nameof(CustomersDto.Active)) HeaderText="فعال" Type="ColumnType.Boolean">
                 <Template>
@@ -40,19 +43,33 @@
 
 @code {
 
-    CustomersDto SelectedCustomer = new CustomersDto { };
+    SfGrid<CustomersDto> Grid;
 
 
-    private void OnRowSelected(RowSelectEventArgs<CustomersDto> args)
+    public void ToolbarClick(Syncfusion.Blazor.Navigations.ClickEventArgs args)
     {
-        args.PreventRender = true; //without this, you may see noticable delay in selection with 75 rows in grid.
-        SelectedCustomer = args.Data;
+        if (args.Item.Id == "Grid_excelexport")
+        {
+            this.Grid.ExcelExport();
+        }
+        if (args.Item.Id == "Grid_pdfexport")
+        {
+            this.Grid.PdfExport();
+        }
     }
 
     private void Edit(int Id)
     {
-        Navigation.NavigateTo($"/createcustomers/{Id}");
+        Navigation.NavigateTo($"/create-customer/{Id}");
 
     }
+
+    public async Task Add()
+    {
+        Navigation.NavigateTo("/create-customer");
+    }
+
+
+
 
 }
