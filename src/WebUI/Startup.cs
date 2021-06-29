@@ -61,6 +61,23 @@ namespace Shipping.WebUI
                 }
             });
 
+            services.AddResponseCompression(options =>
+            {
+                options.EnableForHttps = true;
+                options.Providers.Add<GzipCompressionProvider>();
+                options.MimeTypes =
+            ResponseCompressionDefaults.MimeTypes.Concat(new[] {
+                    "text/plain",
+                    "text/css",
+                    "application/javascript",
+                    "text/html",
+                    "application/xml",
+                    "text/xml",
+                    "application/json",
+                    "text/json",
+                });
+            });
+
 
             services.AddRazorPages();
             // Customise default API behaviour
