@@ -62,6 +62,7 @@ namespace Shipping.WebUI
                 {
                     webBuilder.UseStartup<Startup>();
 
+                    webBuilder.UseUrls("http://0.0.0.0:3000", "https://0.0.0.0:3001");
 
                 });
     }
