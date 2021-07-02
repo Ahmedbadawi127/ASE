@@ -16,7 +16,20 @@ namespace Shipping.WebUI.Controllers
         // customers
 
         [HttpGet("[action]")]
-        public async Task<ActionResult<PagedDataResult<CustomersDto>>> GetCustomers([FromQuery] string Search, [FromQuery] int Take, [FromQuery] int Skip)
+        public async Task<ActionResult<List<CustomersDto>>> GetCustomers([FromQuery] string Search, [FromQuery] int Take, [FromQuery] int Skip)
+        {
+            var result = await Mediator.Send(new GetCustomersQuery()
+            {
+                Search = Search,
+                Take = Take,
+                Skip = Skip,
+            });
+
+            return result;
+        }
+
+        [HttpGet("[action]")]
+        public async Task<ActionResult<PagedDataResult<CustomersDto>>> GetCustomersPage([FromQuery] string Search, [FromQuery] int Take, [FromQuery] int Skip)
         {
             var result = await Mediator.Send(new GetCustomersQuery()
             {
@@ -59,6 +72,33 @@ namespace Shipping.WebUI.Controllers
         public async Task<ActionResult<DeliveryManDto>> GetDeliveryManById(int Id)
         {
             var result = await Mediator.Send(new GetDeliveryManQuery()
+            {
+                Id = Id
+            });
+
+            return result;
+        }
+
+        // Shipment
+
+        [HttpGet("[action]")]
+        public async Task<ActionResult<PagedDataResult<ShipmentsDto>>> GetShipments([FromQuery] string Search, [FromQuery] int Take, [FromQuery] int Skip)
+        {
+            var result = await Mediator.Send(new GetShipmentsQuery()
+            {
+                Search = Search,
+                Take = Take,
+                Skip = Skip,
+            });
+
+            return new PagedDataResult<ShipmentsDto>(result);
+        }
+
+
+        [HttpGet("[action]/{Id:int}")]
+        public async Task<ActionResult<ShipmentsDto>> GetShipmentById(int Id)
+        {
+            var result = await Mediator.Send(new GetShipmentQuery()
             {
                 Id = Id
             });

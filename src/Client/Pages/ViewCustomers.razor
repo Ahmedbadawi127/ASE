@@ -14,7 +14,7 @@
         <GridPageSettings PageSize="20"></GridPageSettings>
         <GridEvents OnToolbarClick="ToolbarClick" TValue="CustomersDto"></GridEvents>
 
-        <SfDataManager Url="@($"api/ServerQueries/GetCustomers/")" Adaptor="Adaptors.WebApiAdaptor"></SfDataManager>
+        <SfDataManager Url="@($"api/ServerQueries/GetCustomersPage/")" Adaptor="Adaptors.WebApiAdaptor"></SfDataManager>
         <GridColumns>
             <GridColumn Field=@(nameof(CustomersDto.Id)) HeaderText="الأي دي"></GridColumn>
             <GridColumn Field=@(nameof(CustomersDto.NameAr)) HeaderText="الاسم العربي"></GridColumn>

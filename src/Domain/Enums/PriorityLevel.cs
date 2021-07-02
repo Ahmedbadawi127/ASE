@@ -13,4 +13,12 @@
         Manager,
         Staff
     }
+
+    public enum ShipmentStatus
+    {
+        Draft = 1,
+        Delivering,
+        Delivered,
+        returned,
+    }
 }

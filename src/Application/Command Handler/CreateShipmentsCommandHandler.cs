@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Collections.Generic;
+using Shipping.Domain.Enums;
 
 namespace Shipping.Application.CreateFlowCommands
 {
@@ -34,6 +35,7 @@ namespace Shipping.Application.CreateFlowCommands
 
         public async Task<int> Handle(CreateShipmentsCommand request, CancellationToken cancellationToken)
         {
+
             var customer = _context.Customers.SingleOrDefault(u => u.Id == request.CustomerId);
 
             if (customer == null)
@@ -41,32 +43,57 @@ namespace Shipping.Application.CreateFlowCommands
                 throw new NotFoundException(nameof(customer), request.CustomerId);
             }
 
-            var entity = new Shipment
-            {
-                Name = request.ShipmentName??"",
-                ReceiverCityId = request.ReceiverCityId,
-                ReceiverCityName = request.ReceiverCityName,
-                ReceiverStateId = request.ReceiverStateId,
-                CustomerId = request.CustomerId,
-                ReceiverName = request.ReceiverName,
-                ReceiverPhone = request.ReceiverPhone,
-                Notes = request.Notes,
-                ReceiverStateName = request.ReceiverStateName,
-                Address = request.Address,
-                CashToBeCollected = request.CashToBeCollected,
-            };
-
             try
             {
-                customer.Shipments.Add(entity);
-                await _context.SaveChangesAsync(cancellationToken);
-                return entity.Id;
 
+                if (request.Id > 0)
+                {
+                    var c = _context.Shipments.First(e => e.Id == request.Id);
+
+
+                    c.Name = request.ShipmentName ?? "";
+                    c.ReceiverCityId = request.ReceiverCityId;
+                    c.ReceiverCityName = request.ReceiverCityName;
+                    c.ReceiverStateId = request.ReceiverStateId;
+                    c.CustomerId = request.CustomerId;
+                    c.ReceiverName = request.ReceiverName;
+                    c.ReceiverPhone = request.ReceiverPhone;
+                    c.Notes = request.Notes;
+                    c.ReceiverStateName = request.ReceiverStateName;
+                    c.Address = request.Address;
+                    c.CashToBeCollected = request.CashToBeCollected;
+                    c.Status = ShipmentStatus.Draft;
+
+                    await _context.SaveChangesAsync(cancellationToken);
+
+                    return c.Id;
+
+                }
+                else
+                {
+                    var entity = new Shipment
+                    {
+                        Name = request.ShipmentName ?? "",
+                        ReceiverCityId = request.ReceiverCityId,
+                        ReceiverCityName = request.ReceiverCityName,
+                        ReceiverStateId = request.ReceiverStateId,
+                        CustomerId = request.CustomerId,
+                        ReceiverName = request.ReceiverName,
+                        ReceiverPhone = request.ReceiverPhone,
+                        Notes = request.Notes,
+                        ReceiverStateName = request.ReceiverStateName,
+                        Address = request.Address,
+                        CashToBeCollected = request.CashToBeCollected,
+                        Status = ShipmentStatus.Draft,
+                    };
+
+                    customer.Shipments.Add(entity);
+                    await _context.SaveChangesAsync(cancellationToken);
+                    return entity.Id;
+                }
             }
             catch (Exception e)
             {
-                customer.Shipments.Remove(entity);
-                await _context.SaveChangesAsync(cancellationToken);
                 throw e;
             }
 

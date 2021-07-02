@@ -1,0 +1,78 @@
+﻿@page "/view-shipments"
+@inject Microsoft.AspNetCore.Components.NavigationManager Navigation
+@using Shipping.Shared.ApiKeysTranslation
+@using Shipping.Shared.Extensions
+
+<h3>عرض الشحنات</h3>
+
+<div>
+
+    <SfButton @onclick="Add" CssClass="e-info"> اضافة شحنه </SfButton>
+
+    <SfGrid ID="Grid" AllowReordering="true" @ref="Grid" AllowFiltering="true" AllowExcelExport="true" AllowGrouping="true" AllowPdfExport="true"
+            AllowRowDragAndDrop="true" AllowSorting="true" AllowTextWrap="true" Width="100%" AllowPaging="true" TValue="ShipmentsDto" EnableRtl="true"
+            Toolbar="@(new List<string>() { "ExcelExport", "PdfExport" })">
+
+        <GridPageSettings PageSize="20"></GridPageSettings>
+        <GridEvents OnToolbarClick="ToolbarClick" TValue="ShipmentsDto"></GridEvents>
+
+        <SfDataManager Url="@($"api/ServerQueries/GetShipments/")" Adaptor="Adaptors.WebApiAdaptor"></SfDataManager>
+        <GridColumns>
+            <GridColumn Field=@(nameof(ShipmentsDto.Id)) HeaderText="الأي دي"></GridColumn>
+            <GridColumn Field=@(nameof(ShipmentsDto.CustomerName)) HeaderText="الراسل"></GridColumn>
+            <GridColumn Field=@(nameof(ShipmentsDto.ReceiverName)) HeaderText="المرسل اليه"></GridColumn>
+            <GridColumn Field=@(nameof(ShipmentsDto.ReceiverStateName)) HeaderText="محافظة المرسل اليه"></GridColumn>
+            <GridColumn Field=@(nameof(ShipmentsDto.ReceiverCityName)) HeaderText="مدينة المرسل اليه"></GridColumn>
+            <GridColumn Field=@(nameof(ShipmentsDto.Address)) HeaderText="عنوان المرسل اليه"></GridColumn>
+            <GridColumn Field=@(nameof(ShipmentsDto.ReceiverPhone)) HeaderText="موبايل المرسل اليه"></GridColumn>
+            <GridColumn Field=@(nameof(ShipmentsDto.CashToBeCollected)) HeaderText="مبلغ التحصيل"></GridColumn>
+            <GridColumn Field=@(nameof(ShipmentsDto.Notes)) HeaderText="ملاحظات"></GridColumn>
+            <GridColumn Field=@(nameof(ShipmentsDto.Status)) HeaderText="الحاله">
+                <Template Context="cContext">
+                    <span>
+                        @((cContext as ShipmentsDto).Status.ToString().Translator(Keys.ShipmentStatus, ApiKeysTranslator.getTranslatedKeys))
+                    </span>
+                </Template>
+            </GridColumn>
+
+            <GridColumn HeaderText="تعديل" TextAlign="TextAlign.Center" Width="120">
+                <Template>
+                    <button class="btn-icon-btn btn-outline-light" @onclick="@(() => Edit((context as ShipmentsDto).Id))">
+                        <img class="btn-icon" src="/img/editingColored.svg" />
+                    </button>
+                </Template>
+            </GridColumn>
+        </GridColumns>
+    </SfGrid>
+</div>
+
+@code {
+
+
+    SfGrid<ShipmentsDto> Grid;
+
+
+    public void ToolbarClick(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+    {
+        if (args.Item.Id == "Grid_excelexport")
+        {
+            this.Grid.ExcelExport();
+        }
+        if (args.Item.Id == "Grid_pdfexport")
+        {
+            this.Grid.PdfExport();
+        }
+    }
+
+    private void Edit(int Id)
+    {
+        Navigation.NavigateTo($"/create-Shipment/{Id}");
+    }
+
+    public async Task Add()
+    {
+        Navigation.NavigateTo("/create-shipment");
+    }
+
+
+}

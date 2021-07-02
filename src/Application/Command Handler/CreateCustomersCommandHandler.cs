@@ -61,14 +61,6 @@ namespace Shipping.Application.CreateFlowCommands
                 }
                 else
                 {
-                    //var userEntity = new User
-                    //{
-                    //    SId = Guid.NewGuid(),
-                    //    NameAr = request.NameAr,
-                    //    NameEn = request.NameEn,
-                    //    UserTypeId = (int)UserType.Customer,
-                    //};
-
                     var entity = new Customer
                     {
                         NameAr = request.NameAr,
