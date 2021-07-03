@@ -1,0 +1,140 @@
+﻿@page "/customers"
+@inject Microsoft.AspNetCore.Components.NavigationManager Navigation
+@inject HttpClient Http
+
+<h3>عرض العملاء</h3>
+
+<div>
+
+    <SfButton @onclick="Add" CssClass="e-info"> اضافة عميل </SfButton>
+
+    <SfGrid ID="Grid" AllowReordering="true" @ref="Grid" AllowFiltering="true" AllowExcelExport="true" AllowGrouping="true" AllowPdfExport="true"
+            AllowRowDragAndDrop="true" AllowSorting="true" AllowTextWrap="true" Width="100%" AllowPaging="true" TValue="CustomersDto" EnableRtl="true"
+            Toolbar="@(new List<string>() { "ExcelExport", "PdfExport" })">
+
+        <GridPageSettings PageSize="20"></GridPageSettings>
+        <GridEvents OnToolbarClick="ToolbarClick" TValue="CustomersDto"></GridEvents>
+
+        <SfDataManager Url="@($"api/Customers/GetCustomersPage/")" Adaptor="Adaptors.WebApiAdaptor"></SfDataManager>
+        <GridColumns>
+            <GridColumn Field=@(nameof(CustomersDto.Id)) HeaderText="الأي دي"></GridColumn>
+            <GridColumn Field=@(nameof(CustomersDto.NameAr)) HeaderText="الاسم العربي"></GridColumn>
+            <GridColumn Field=@(nameof(CustomersDto.NameEn)) HeaderText="الاسم الانجليزي"></GridColumn>
+            <GridColumn Field=@(nameof(CustomersDto.Phone)) HeaderText="موبايل"></GridColumn>
+            <GridColumn Field=@(nameof(CustomersDto.StateName)) HeaderText="محافظة"></GridColumn>
+            <GridColumn Field=@(nameof(CustomersDto.CityName)) HeaderText="مدينة"></GridColumn>
+            <GridColumn Field=@(nameof(CustomersDto.GenderName)) HeaderText="النوع"></GridColumn>
+            <GridColumn Field=@(nameof(CustomersDto.Age)) HeaderText="العمر"></GridColumn>
+            <GridColumn Field=@(nameof(CustomersDto.Active)) HeaderText="فعال" Type="ColumnType.Boolean">
+                <Template>
+                    <span>@((context as CustomersDto).Active == true ? "نعم" : "لا")</span>
+                </Template>
+            </GridColumn>
+
+            <GridColumn HeaderText="خيارات" TextAlign="TextAlign.Center" Width="170">
+                <Template>
+
+                    <div class="d-flex justify-content-center">
+                        <div class="col-6">
+                            <button class="btn-icon-btn btn-outline-light" @onclick="@(() => Edit((context as CustomersDto).Id))">
+                                <img class="btn-icon" src="/img/editingColored.svg" />
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn-icon-btn btn-outline-light" @onclick="@(() => Delete((context as CustomersDto).Id))">
+                                <img class="btn-icon" src="/img/trash.png" />
+                            </button>
+                        </div>
+                    </div>
+
+                </Template>
+            </GridColumn>
+        </GridColumns>
+    </SfGrid>
+</div>
+
+@if (DeletedRecordId > 0)
+{
+    <DeleteConfirmationComponent DeletedRecordId="@DeletedRecordId" OnSuccess="OnSuccessDeleting" OnCancel="OnCancelDeleting"></DeleteConfirmationComponent>
+}
+
+
+@code {
+    SfGrid<CustomersDto> Grid;
+
+    public void ToolbarClick(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+    {
+        if (args.Item.Id == "Grid_excelexport")
+        {
+            this.Grid.ExcelExport();
+        }
+        if (args.Item.Id == "Grid_pdfexport")
+        {
+            this.Grid.PdfExport();
+        }
+    }
+
+    private void Edit(int Id)
+    {
+        Navigation.NavigateTo($"/customers/update/{Id}");
+    }
+
+    public async Task Add()
+    {
+        Navigation.NavigateTo("/customers/create");
+    }
+
+
+    #region DeleteDialog
+
+    public int DeletedRecordId { get; set; }
+
+    private void Delete(int Id)
+    {
+        DeletedRecordId = Id;
+    }
+
+    private async Task DeleteConfirmed()
+    {
+        try
+        {
+            if (DeletedRecordId > 0)
+            {
+                var response = await Http.PostAsJsonAsync<int>("api/Customers/Delete", DeletedRecordId);
+                if (!response.IsSuccessStatusCode)
+                {
+                    string error = await response.Content.ReadAsStringAsync();
+
+                    //var converted = JsonConvert.DeserializeObject<ExceptionResponse>(error);
+                    //await umAlQuraOperations.ShowToast("رساله خطأ من النظام", converted.Detail, "error");
+
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+
+            //await umAlQuraOperations.ShowToast("رساله خطأ من النظام", ex.Message, "error");
+        }
+
+        Grid.Refresh();
+    }
+
+
+    public async Task OnCancelDeleting()
+    {
+        DeletedRecordId = 0;
+    }
+
+    public async Task OnSuccessDeleting()
+    {
+        await DeleteConfirmed();
+        DeletedRecordId = 0;
+    }
+
+    #endregion
+
+
+
+}

@@ -1,0 +1,47 @@
+﻿@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Popups
+
+
+<SfDialog @ref="Dialog" Width="250px" ShowCloseIcon="true" IsModal="true">
+    <DialogTemplates>
+        <Header>حذف عنصر</Header>
+        <Content> هل أنت متأكد من حذف عنصر @(DeletedRecordId) ؟</Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton OnClick="@OkClick">
+            <DialogButtonModel Content="تأكيد" IsPrimary="true"></DialogButtonModel>
+        </DialogButton>
+        <DialogButton OnClick="@CancelClick">
+            <DialogButtonModel Content="إلغاء"></DialogButtonModel>
+        </DialogButton>
+    </DialogButtons>
+</SfDialog>
+
+
+
+@code{
+
+    public bool test { get; set; }
+
+    private SfDialog Dialog;
+
+    [Parameter]
+    public int DeletedRecordId { get; set; }
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+    [Parameter]
+    public EventCallback OnSuccess { get; set; }
+
+
+    private async Task OkClick()
+    {
+        this.DeletedRecordId = 0;
+        await OnSuccess.InvokeAsync(null);
+    }
+    private async Task CancelClick()
+    {
+        this.DeletedRecordId = 0;
+        await OnCancel.InvokeAsync(null);
+    }
+
+}
