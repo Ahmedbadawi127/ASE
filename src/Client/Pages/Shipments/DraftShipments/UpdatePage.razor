@@ -1,12 +1,11 @@
-﻿@page "/shipments/create"
+﻿@page "/draft-DraftShipments/update/{Id:int}"
 @inject Microsoft.AspNetCore.Components.NavigationManager Navigation
-@using Shipping.Domain.Enums;
 @using Shipping.Shared.Commands.Shipments
 
 @if (FModel != null)
 {
 
-    <h3>تسجيل شحنه</h3>
+    <h3>تعديل شحنه</h3>
 
     <EditForm Model="@FModel" OnValidSubmit="SubmitClick">
         <FluentValidator Validator="custVal" />
@@ -101,8 +100,8 @@
     [Parameter]
     public int Id { get; set; }
 
-    public CreateShipmentFM FModel { get; set; }
-    CreateShipmentCommandValidator custVal = new CreateShipmentCommandValidator();
+    public CreateDraftShipmentFM FModel { get; set; }
+    CreateDraftShipmentCommandValidator custVal = new CreateDraftShipmentCommandValidator();
 
 
     public SfDropDownList<int, CustomersDto> refCustomer { get; set; }
@@ -191,11 +190,29 @@
         this.StateQuery = new Query().AddParams("Take", 6);
 
 
-
-        FModel = new CreateShipmentFM
+        if (Id > 0)
         {
-            Status = ShipmentStatus.Draft,
-        };
+            var DraftShipmentData = await Http.GetFromJsonAsync<DraftShipmentsDto>($"api/DraftShipments/GetDraftShipmentById/{Id}");
+
+            FModel = new CreateDraftShipmentFM
+            {
+                Id = DraftShipmentData.Id,
+                CashToBeCollected = DraftShipmentData.CashToBeCollected,
+                CustomerId = DraftShipmentData.CustomerId,
+                Notes = DraftShipmentData.Notes,
+                ReceiverCityId = DraftShipmentData.ReceiverCityId,
+                ReceiverCityName = DraftShipmentData.ReceiverCityName,
+                ReceiverName = DraftShipmentData.ReceiverName,
+                ReceiverPhone = DraftShipmentData.ReceiverPhone,
+                ReceiverStateId = DraftShipmentData.ReceiverStateId,
+                ReceiverStateName = DraftShipmentData.ReceiverStateName,
+                ShipmentName = DraftShipmentData.ShipmentName,
+                CustomerName = DraftShipmentData.CustomerName,
+                Address = DraftShipmentData.Address,
+                Status = DraftShipmentData.Status,
+            };
+
+        }
 
     }
 
@@ -210,7 +227,7 @@
         try
         {
             Disabled = true;
-            var response = await Http.PostAsJsonAsync<CreateShipmentCommand>("api/Shipments/Create", FModel);
+            var response = await Http.PostAsJsonAsync<CreateDraftShipmentCommand>("api/DraftShipments/UpdateDraftShipment", FModel);
             if (!response.IsSuccessStatusCode)
             {
                 Disabled = false;
@@ -225,7 +242,7 @@
             else
             {
                 Disabled = false;
-                Navigation.NavigateTo($"/shipments");
+                Navigation.NavigateTo($"/draft-shipments");
             }
         }
         catch (Exception ex)

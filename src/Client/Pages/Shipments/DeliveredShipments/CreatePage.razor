@@ -1,0 +1,105 @@
+﻿@page "/delivered-shipments/create"
+@inject Microsoft.AspNetCore.Components.NavigationManager Navigation
+@using Shipping.Domain.Enums;
+@using Shipping.Shared.Commands.Shipments
+
+@if (FModel != null)
+{
+
+    <h3>إستلام شحنه</h3>
+
+    <EditForm Model="@FModel" OnValidSubmit="SubmitClick">
+        <FluentValidator Validator="custVal" />
+        <ValidationSummary />
+
+        <div class="row">
+            <div class="form-group col-md-6">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+
+            </div>
+            <div class="form-group col-md-6">
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" disabled=@Disabled class="btn btn-primary">حفظ</button>
+            <button class="btn btn-link" @onclick="Cancel_Click">إلغاء</button>
+        </div>
+    </EditForm>
+
+    <div>
+        <div id="container">
+            <SfSpinner @bind-Visible="@Disabled" Label="تحميل ...">
+            </SfSpinner>
+        </div>
+    </div>
+
+}
+@code {
+
+    [Inject]
+    protected HttpClient Http { get; set; }
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+    [Parameter]
+    public EventCallback<string> OnSuccess { get; set; }
+    bool Disabled { get; set; }
+
+    public CreateDeliveredShipmentFM FModel { get; set; }
+    CreateDeliveredShipmentCommandValidator custVal = new CreateDeliveredShipmentCommandValidator();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Disabled = false;
+
+
+        FModel = new CreateDeliveredShipmentFM
+        {
+            Status = ShipmentStatus.Delivered,
+        };
+
+    }
+
+
+    public async Task Cancel_Click()
+    {
+        await OnCancel.InvokeAsync(null);
+    }
+
+    protected async Task SubmitClick()
+    {
+        try
+        {
+            Disabled = true;
+            var response = await Http.PostAsJsonAsync<CreateDeliveredShipmentCommand>("api/DeliveredShipments/CreateDeliveredShipment", FModel);
+            if (!response.IsSuccessStatusCode)
+            {
+                Disabled = false;
+                string error = await response.Content.ReadAsStringAsync();
+                throw new Exception(error);
+            }
+            string fid = await response.Content.ReadAsStringAsync();
+            if (OnSuccess.HasDelegate)
+            {
+                await OnSuccess.InvokeAsync(fid);
+            }
+            else
+            {
+                Disabled = false;
+                Navigation.NavigateTo($"/delivered-shipments");
+            }
+        }
+        catch (Exception ex)
+        {
+            //await umAlQuraOperations.ShowToast("رساله خطأ من النظام", ex.Message, "error");
+        }
+    }
+}
+
+

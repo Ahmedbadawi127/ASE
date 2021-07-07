@@ -12,12 +12,12 @@ using Shipping.Domain.Enums;
 
 namespace Shipping.Shared.Commands.Shipments
 {
-    public class CreateShipmentFM : CreateShipmentCommand
+    public class UpdateDraftShipmentFM : UpdateDraftShipmentCommand
     {
 
     }
 
-    public class CreateShipmentCommand : IRequest<int>
+    public class UpdateDraftShipmentCommand : IRequest<int>
     {
         public int Id { get; set; }
         public string ShipmentName { get; set; }
@@ -37,22 +37,22 @@ namespace Shipping.Shared.Commands.Shipments
 
     }
 
-    public class CreateShipmentFMValidator : CreateShipmentCommandValidator<CreateShipmentFM>
+    public class UpdateDraftShipmentFMValidator : UpdateDraftShipmentCommandValidator<UpdateDraftShipmentFM>
     {
-        public CreateShipmentFMValidator()
+        public UpdateDraftShipmentFMValidator()
         {
 
 
         }
     }
 
-    public class CreateShipmentCommandValidator : CreateShipmentCommandValidator<CreateShipmentCommand>
+    public class UpdateDraftShipmentCommandValidator : UpdateDraftShipmentCommandValidator<UpdateDraftShipmentCommand>
     {
     }
-    public class CreateShipmentCommandValidator<T> : AbstractValidator<T> where T : CreateShipmentCommand
+    public class UpdateDraftShipmentCommandValidator<T> : AbstractValidator<T> where T : UpdateDraftShipmentCommand
     {
         protected DateTime DateNullValue = DateTime.Parse("4-30-1900");
-        public CreateShipmentCommandValidator()
+        public UpdateDraftShipmentCommandValidator()
         {
 
 

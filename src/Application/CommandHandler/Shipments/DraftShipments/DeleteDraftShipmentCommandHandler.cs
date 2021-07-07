@@ -8,13 +8,13 @@ using Shipping.Shared.Commands.Shipments;
 
 namespace Shipping.Application.CommandHandler.Shipments
 {
-    public class DeleteShipmentCommandHandler : IRequestHandler<DeleteShipmentCommand, int>
+    public class DeleteDraftShipmentCommandHandler : IRequestHandler<DeleteDraftShipmentCommand, int>
     {
 
         private readonly IApplicationDbContext _context;
         private readonly ILookupService _lookupService;
 
-        public DeleteShipmentCommandHandler
+        public DeleteDraftShipmentCommandHandler
         (
              IApplicationDbContext context
             , ILookupService lookupService
@@ -23,7 +23,7 @@ namespace Shipping.Application.CommandHandler.Shipments
             _lookupService = lookupService;
             _context = context;
         }
-        public async Task<int> Handle(DeleteShipmentCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(DeleteDraftShipmentCommand request, CancellationToken cancellationToken)
         {
 
             try

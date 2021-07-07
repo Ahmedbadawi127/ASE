@@ -10,13 +10,13 @@ using Shipping.Shared.Commands.Shipments;
 
 namespace Shipping.Application.CommandHandler.Shipments
 {
-    public class CreateShipmentCommandHandler : IRequestHandler<CreateShipmentCommand, int>
+    public class CreateDraftShipmentCommandHandler : IRequestHandler<CreateDraftShipmentCommand, int>
     {
 
         private readonly IApplicationDbContext _context;
         private readonly ILookupService _lookupService;
 
-        public CreateShipmentCommandHandler
+        public CreateDraftShipmentCommandHandler
         (
              IApplicationDbContext context
             , ILookupService lookupService
@@ -25,7 +25,7 @@ namespace Shipping.Application.CommandHandler.Shipments
             _lookupService = lookupService;
             _context = context;
         }
-        public async Task<int> Handle(CreateShipmentCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateDraftShipmentCommand request, CancellationToken cancellationToken)
         {
 
             try

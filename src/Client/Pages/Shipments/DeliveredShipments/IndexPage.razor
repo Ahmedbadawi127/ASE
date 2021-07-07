@@ -1,0 +1,70 @@
+﻿@page "/delivered-shipments"
+@inject Microsoft.AspNetCore.Components.NavigationManager Navigation
+@using Shipping.Shared.ApiKeysTranslation
+@using Shipping.Shared.Extensions
+@inject HttpClient Http
+@using Shipping.Domain.Enums;
+
+<h3>عرض الشحنات المستلمه</h3>
+
+<div>
+
+    <SfButton @onclick="Add" CssClass="e-info"> إستلام شحنه </SfButton>
+
+    <SfGrid ID="Grid" AllowReordering="true" @ref="Grid" AllowFiltering="true" AllowExcelExport="true" AllowGrouping="true" AllowPdfExport="true"
+            AllowRowDragAndDrop="true" AllowSorting="true" AllowTextWrap="true" Width="100%" AllowPaging="true" TValue="DeliveredShipmentsDto" EnableRtl="true"
+            Toolbar="@(new List<string>() { "ExcelExport", "PdfExport" })">
+
+        <GridPageSettings PageSize="20"></GridPageSettings>
+        <GridEvents OnToolbarClick="ToolbarClick" TValue="DeliveredShipmentsDto"></GridEvents>
+
+        <SfDataManager Url="@($"api/DeliveredShipments/GetDeliveredShipmentsPage/")" Adaptor="Adaptors.WebApiAdaptor"></SfDataManager>
+        <GridColumns>
+            <GridColumn Field=@(nameof(DeliveredShipmentsDto.Id)) HeaderText="الأي دي"></GridColumn>
+            <GridColumn Field=@(nameof(DeliveredShipmentsDto.CustomerName)) HeaderText="الراسل"></GridColumn>
+            <GridColumn Field=@(nameof(DeliveredShipmentsDto.ReceiverName)) HeaderText="المرسل اليه"></GridColumn>
+            <GridColumn Field=@(nameof(DeliveredShipmentsDto.ReceiverStateName)) HeaderText="محافظة المرسل اليه"></GridColumn>
+            <GridColumn Field=@(nameof(DeliveredShipmentsDto.ReceiverCityName)) HeaderText="مدينة المرسل اليه"></GridColumn>
+            <GridColumn Field=@(nameof(DeliveredShipmentsDto.Address)) HeaderText="عنوان المرسل اليه"></GridColumn>
+            <GridColumn Field=@(nameof(DeliveredShipmentsDto.ReceiverPhone)) HeaderText="موبايل المرسل اليه"></GridColumn>
+            <GridColumn Field=@(nameof(DeliveredShipmentsDto.CashToBeCollected)) HeaderText="مبلغ التحصيل"></GridColumn>
+            <GridColumn Field=@(nameof(DeliveredShipmentsDto.Notes)) HeaderText="ملاحظات"></GridColumn>
+            <GridColumn Field=@(nameof(DeliveredShipmentsDto.Status)) HeaderText="الحاله">
+                <Template Context="cContext">
+                    <span>
+                        @((cContext as DeliveredShipmentsDto).Status.ToString().Translator(Keys.ShipmentStatus, ApiKeysTranslator.getTranslatedKeys))
+                    </span>
+                </Template>
+            </GridColumn>
+
+        </GridColumns>
+    </SfGrid>
+</div>
+
+
+
+@code {
+
+
+    SfGrid<DeliveredShipmentsDto> Grid;
+
+
+    public void ToolbarClick(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+    {
+        if (args.Item.Id == "Grid_excelexport")
+        {
+            this.Grid.ExcelExport();
+        }
+        if (args.Item.Id == "Grid_pdfexport")
+        {
+            this.Grid.PdfExport();
+        }
+    }
+
+    public async Task Add()
+    {
+        Navigation.NavigateTo("/delivered-shipments/create");
+    }
+
+
+}

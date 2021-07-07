@@ -17,7 +17,7 @@
     public enum ShipmentStatus
     {
         Draft = 1,
-        Delivering,
+        Approved,
         Delivered,
         returned,
     }

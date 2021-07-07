@@ -1,38 +1,38 @@
-﻿@page "/shipments"
+﻿@page "/draft-shipments"
 @inject Microsoft.AspNetCore.Components.NavigationManager Navigation
 @using Shipping.Shared.ApiKeysTranslation
 @using Shipping.Shared.Extensions
 @inject HttpClient Http
 @using Shipping.Domain.Enums;
 
-<h3>عرض الشحنات</h3>
+<h3>عرض الشحنات الجديده</h3>
 
 <div>
 
     <SfButton @onclick="Add" CssClass="e-info"> اضافة شحنه </SfButton>
 
     <SfGrid ID="Grid" AllowReordering="true" @ref="Grid" AllowFiltering="true" AllowExcelExport="true" AllowGrouping="true" AllowPdfExport="true"
-            AllowRowDragAndDrop="true" AllowSorting="true" AllowTextWrap="true" Width="100%" AllowPaging="true" TValue="ShipmentsDto" EnableRtl="true"
+            AllowRowDragAndDrop="true" AllowSorting="true" AllowTextWrap="true" Width="100%" AllowPaging="true" TValue="DraftShipmentsDto" EnableRtl="true"
             Toolbar="@(new List<string>() { "ExcelExport", "PdfExport" })">
 
         <GridPageSettings PageSize="20"></GridPageSettings>
-        <GridEvents OnToolbarClick="ToolbarClick" TValue="ShipmentsDto"></GridEvents>
+        <GridEvents OnToolbarClick="ToolbarClick" TValue="DraftShipmentsDto"></GridEvents>
 
-        <SfDataManager Url="@($"api/Shipments/GetShipmentsPage/")" Adaptor="Adaptors.WebApiAdaptor"></SfDataManager>
+        <SfDataManager Url="@($"api/DraftShipments/GetDraftShipmentsPage/")" Adaptor="Adaptors.WebApiAdaptor"></SfDataManager>
         <GridColumns>
-            <GridColumn Field=@(nameof(ShipmentsDto.Id)) HeaderText="الأي دي"></GridColumn>
-            <GridColumn Field=@(nameof(ShipmentsDto.CustomerName)) HeaderText="الراسل"></GridColumn>
-            <GridColumn Field=@(nameof(ShipmentsDto.ReceiverName)) HeaderText="المرسل اليه"></GridColumn>
-            <GridColumn Field=@(nameof(ShipmentsDto.ReceiverStateName)) HeaderText="محافظة المرسل اليه"></GridColumn>
-            <GridColumn Field=@(nameof(ShipmentsDto.ReceiverCityName)) HeaderText="مدينة المرسل اليه"></GridColumn>
-            <GridColumn Field=@(nameof(ShipmentsDto.Address)) HeaderText="عنوان المرسل اليه"></GridColumn>
-            <GridColumn Field=@(nameof(ShipmentsDto.ReceiverPhone)) HeaderText="موبايل المرسل اليه"></GridColumn>
-            <GridColumn Field=@(nameof(ShipmentsDto.CashToBeCollected)) HeaderText="مبلغ التحصيل"></GridColumn>
-            <GridColumn Field=@(nameof(ShipmentsDto.Notes)) HeaderText="ملاحظات"></GridColumn>
-            <GridColumn Field=@(nameof(ShipmentsDto.Status)) HeaderText="الحاله">
+            <GridColumn Field=@(nameof(DraftShipmentsDto.Id)) HeaderText="الأي دي"></GridColumn>
+            <GridColumn Field=@(nameof(DraftShipmentsDto.CustomerName)) HeaderText="الراسل"></GridColumn>
+            <GridColumn Field=@(nameof(DraftShipmentsDto.ReceiverName)) HeaderText="المرسل اليه"></GridColumn>
+            <GridColumn Field=@(nameof(DraftShipmentsDto.ReceiverStateName)) HeaderText="محافظة المرسل اليه"></GridColumn>
+            <GridColumn Field=@(nameof(DraftShipmentsDto.ReceiverCityName)) HeaderText="مدينة المرسل اليه"></GridColumn>
+            <GridColumn Field=@(nameof(DraftShipmentsDto.Address)) HeaderText="عنوان المرسل اليه"></GridColumn>
+            <GridColumn Field=@(nameof(DraftShipmentsDto.ReceiverPhone)) HeaderText="موبايل المرسل اليه"></GridColumn>
+            <GridColumn Field=@(nameof(DraftShipmentsDto.CashToBeCollected)) HeaderText="مبلغ التحصيل"></GridColumn>
+            <GridColumn Field=@(nameof(DraftShipmentsDto.Notes)) HeaderText="ملاحظات"></GridColumn>
+            <GridColumn Field=@(nameof(DraftShipmentsDto.Status)) HeaderText="الحاله">
                 <Template Context="cContext">
                     <span>
-                        @((cContext as ShipmentsDto).Status.ToString().Translator(Keys.ShipmentStatus, ApiKeysTranslator.getTranslatedKeys))
+                        @((cContext as DraftShipmentsDto).Status.ToString().Translator(Keys.ShipmentStatus, ApiKeysTranslator.getTranslatedKeys))
                     </span>
                 </Template>
             </GridColumn>
@@ -42,13 +42,13 @@
 
                     <div class="d-flex justify-content-center">
                         <div class="col-6">
-                            <button class="btn-icon-btn btn-outline-light" @onclick="@(() => Edit((context as ShipmentsDto).Id))">
+                            <button class="btn-icon-btn btn-outline-light" @onclick="@(() => Edit((context as DraftShipmentsDto).Id))">
                                 <img class="btn-icon" src="/img/editingColored.svg" />
                             </button>
                         </div>
 
                         <div class="col-6">
-                            <button class="btn-icon-btn btn-outline-light" disabled="@((context as ShipmentsDto).Status != ShipmentStatus.Draft)" @onclick="@(() => Delete((context as ShipmentsDto).Id))">
+                            <button class="btn-icon-btn btn-outline-light" disabled="@((context as DraftShipmentsDto).Status != ShipmentStatus.Draft)" @onclick="@(() => Delete((context as DraftShipmentsDto).Id))">
                                 <img class="btn-icon" src="/img/trash.png" />
                             </button>
                         </div>
@@ -70,7 +70,7 @@
 @code {
 
 
-    SfGrid<ShipmentsDto> Grid;
+    SfGrid<DraftShipmentsDto> Grid;
 
 
     public void ToolbarClick(Syncfusion.Blazor.Navigations.ClickEventArgs args)
@@ -87,12 +87,12 @@
 
     private void Edit(int Id)
     {
-        Navigation.NavigateTo($"/Shipments/update/{Id}");
+        Navigation.NavigateTo($"/draft-shipments/update/{Id}");
     }
 
     public async Task Add()
     {
-        Navigation.NavigateTo("/shipments/create");
+        Navigation.NavigateTo("/draft-shipments/create");
     }
 
     #region DeleteDialog
@@ -110,7 +110,7 @@
         {
             if (DeletedRecordId > 0)
             {
-                var response = await Http.PostAsJsonAsync<int>("api/Shipments/Delete", DeletedRecordId);
+                var response = await Http.PostAsJsonAsync<int>("api/DraftShipments/DeleteDraftShipment", DeletedRecordId);
                 if (!response.IsSuccessStatusCode)
                 {
                     string error = await response.Content.ReadAsStringAsync();

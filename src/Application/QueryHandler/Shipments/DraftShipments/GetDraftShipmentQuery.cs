@@ -10,17 +10,17 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Shipping.Application.QueryHandler.Shipments
 {
-    public class GetShipmentQuery : IRequest<ShipmentsDto>
+    public class GetDraftShipmentQuery : IRequest<DraftShipmentsDto>
     {
         public int Id { get; set; }
     }
-    public class GetShipmentQueryHandler : IRequestHandler<GetShipmentQuery, ShipmentsDto>
+    public class GetDraftShipmentQueryHandler : IRequestHandler<GetDraftShipmentQuery, DraftShipmentsDto>
     {
         private readonly IMapper _mapper;
         private readonly IApplicationDbContext _context;
         private readonly IMemoryCache _cache;
 
-        public GetShipmentQueryHandler(IMemoryCache cache, IMapper mapper, IApplicationDbContext context)
+        public GetDraftShipmentQueryHandler(IMemoryCache cache, IMapper mapper, IApplicationDbContext context)
         {
             _context = context;
             _mapper = mapper;
@@ -28,12 +28,12 @@ namespace Shipping.Application.QueryHandler.Shipments
 
         }
 
-        public async Task<ShipmentsDto> Handle(GetShipmentQuery request, CancellationToken cancellationToken)
+        public async Task<DraftShipmentsDto> Handle(GetDraftShipmentQuery request, CancellationToken cancellationToken)
         {
             var e = _context.Shipments.First(e => e.Id == request.Id);
             try
             {
-                var item = new ShipmentsDto()
+                var item = new DraftShipmentsDto()
                 {
                     Id = e.Id,
                     CashToBeCollected = e.CashToBeCollected,
@@ -58,7 +58,7 @@ namespace Shipping.Application.QueryHandler.Shipments
             {
 
                 throw;
-                return new ShipmentsDto();
+                return new DraftShipmentsDto();
 
             }
 

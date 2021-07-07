@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Shipping.Shared.Dto
 {
-    public class ShipmentsDto
+    public class DeliveredShipmentsDto
     {
         public int Id { get; set; }
         public string ShipmentName { get; set; }

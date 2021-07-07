@@ -13,7 +13,7 @@ using Shipping.Shared.Extensions;
 namespace Shipping.Shared.Commands.Shipments
 {
 
-    public class DeleteShipmentCommand : IRequest<int>
+    public class DeleteDraftShipmentCommand : IRequest<int>
     {
 
         [DisplayName("المعرف")]
