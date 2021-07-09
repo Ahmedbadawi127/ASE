@@ -227,15 +227,13 @@
             else
             {
                 Disabled = false;
-
                 Navigation.NavigateTo($"/deliverymen");
-
+                await ShippingOperations.ShowToast("نجاح", "تمت العملية بنجاح", ToastType.Success);
             }
         }
         catch (Exception ex)
         {
-            throw new Exception(ex.Message);
-            //await umAlQuraOperations.ShowToast("رساله خطأ من النظام", ex.Message, "error");
+            await ShippingOperations.ShowToast("خطأ من النظام", ex.Message, ToastType.Error);
         }
     }
 }

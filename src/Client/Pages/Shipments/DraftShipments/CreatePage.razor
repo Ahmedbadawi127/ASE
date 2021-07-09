@@ -1,7 +1,6 @@
 ﻿@page "/draft-shipments/create"
 @inject Microsoft.AspNetCore.Components.NavigationManager Navigation
-@using Shipping.Domain.Enums;
-@using Shipping.Shared.Commands.Shipments
+@using Shipping.Shared.Commands.Shipments;
 
 @if (FModel != null)
 {
@@ -81,6 +80,7 @@
         </div>
     </EditForm>
 
+
     <div>
         <div id="container">
             <SfSpinner @bind-Visible="@Disabled" Label="تحميل ...">
@@ -90,6 +90,7 @@
 
 }
 @code {
+
 
     [Inject]
     protected HttpClient Http { get; set; }
@@ -217,20 +218,16 @@
                 string error = await response.Content.ReadAsStringAsync();
                 throw new Exception(error);
             }
-            string fid = await response.Content.ReadAsStringAsync();
-            if (OnSuccess.HasDelegate)
-            {
-                await OnSuccess.InvokeAsync(fid);
-            }
             else
             {
                 Disabled = false;
                 Navigation.NavigateTo($"/draft-shipments");
+                await ShippingOperations.ShowToast("نجاح", "تمت العملية بنجاح", ToastType.Success);
             }
         }
         catch (Exception ex)
         {
-            //await umAlQuraOperations.ShowToast("رساله خطأ من النظام", ex.Message, "error");
+            await ShippingOperations.ShowToast("خطأ من النظام", ex.Message, ToastType.Error);
         }
     }
 }

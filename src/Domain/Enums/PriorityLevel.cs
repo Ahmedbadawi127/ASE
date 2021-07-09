@@ -21,4 +21,13 @@
         Delivered,
         returned,
     }
+
+    public enum ToastType
+    {
+        Null,
+        Warning,
+        Success,
+        Error,
+        Info,
+    }
 }

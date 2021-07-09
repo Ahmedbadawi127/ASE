@@ -1,14 +1,24 @@
 ﻿@inherits LayoutComponentBase
+@inject IShippingOperations ShippingOperations
+@using Syncfusion.Blazor.Notifications
 
 <div class="page">
     <div class="sidebar">
         <NavMenu />
+
+        <div class="col-lg-12 control-section toast-default-section">
+            <SfToast @ref="ShippingOperations.ToastObj">
+                <ToastPosition X="Right" Y="Top"></ToastPosition>
+            </SfToast>
+        </div>
+
     </div>
 
     <div class="main">
         <div class="top-row px-4">
-            <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
+            <span>About Us</span>
         </div>
+
 
         <div class="content px-4">
             @Body
