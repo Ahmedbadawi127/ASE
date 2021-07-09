@@ -14,7 +14,7 @@ namespace Shipping.WebUI.Controllers
     {
 
         [HttpPost("[action]")]
-        public async Task<ActionResult<int>> CreateDraftShipment(CreateApprovedShipmentCommand command)
+        public async Task<ActionResult<int>> CreateDraftShipment(CreateDraftShipmentCommand command)
         {
             return await Mediator.Send(command);
         }
