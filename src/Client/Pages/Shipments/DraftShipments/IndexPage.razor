@@ -42,13 +42,13 @@
 
                     <div class="d-flex justify-content-center">
                         <div class="col-6">
-                            <button class="btn-icon-btn btn-outline-light" @onclick="@(() => Edit((context as DraftShipmentsDto).Id))">
+                            <button class="btn-icon-btn btn-outline-light" disabled=@Disabled @onclick="@(() => Edit((context as DraftShipmentsDto).Id))">
                                 <img class="btn-icon" src="/img/editingColored.svg" />
                             </button>
                         </div>
 
                         <div class="col-6">
-                            <button class="btn-icon-btn btn-outline-light" disabled="@((context as DraftShipmentsDto).Status != ShipmentStatus.Draft)" @onclick="@(() => Delete((context as DraftShipmentsDto).Id))">
+                            <button class="btn-icon-btn btn-outline-light" disabled="@((context as DraftShipmentsDto).Status != ShipmentStatus.Draft && Disabled)" @onclick="@(() => Delete((context as DraftShipmentsDto).Id))">
                                 <img class="btn-icon" src="/img/trash.png" />
                             </button>
                         </div>
@@ -71,6 +71,13 @@
 
 
     SfGrid<DraftShipmentsDto> Grid;
+    bool Disabled { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Disabled = false;
+    }
 
 
     public void ToolbarClick(Syncfusion.Blazor.Navigations.ClickEventArgs args)
@@ -110,14 +117,20 @@
         {
             if (DeletedRecordId > 0)
             {
+                Disabled = true;
+                ShippingOperations.ShowSpinner(Disabled);
                 var response = await Http.PostAsJsonAsync<int>("api/DraftShipments/DeleteDraftShipment", DeletedRecordId);
                 if (!response.IsSuccessStatusCode)
                 {
+                    Disabled = false;
+                    ShippingOperations.ShowSpinner(Disabled);
                     string error = await response.Content.ReadAsStringAsync();
                     throw new Exception(error);
                 }
                 else
                 {
+                    Disabled = false;
+                    ShippingOperations.ShowSpinner(Disabled);
                     await ShippingOperations.ShowToast("نجاح", "تمت العملية بنجاح", ToastType.Success);
                 }
             }
@@ -125,6 +138,8 @@
         }
         catch (Exception ex)
         {
+            Disabled = false;
+            ShippingOperations.ShowSpinner(Disabled);
             await ShippingOperations.ShowToast("خطأ من النظام", ex.Message, ToastType.Error);
         }
 

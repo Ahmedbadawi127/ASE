@@ -22,6 +22,11 @@
 
         <div class="content px-4">
             @Body
+
+            <div id="container">
+                <SfSpinner @bind-Visible="@ShippingOperations.isLoading" Label="تحميل ...">
+                </SfSpinner>
+            </div>
         </div>
     </div>
 </div>

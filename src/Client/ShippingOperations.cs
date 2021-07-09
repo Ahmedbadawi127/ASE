@@ -1,18 +1,21 @@
 ﻿using Shipping.Domain.Enums;
-using Syncfusion.Blazor.Notifications;
 using System.Threading.Tasks;
+using Syncfusion.Blazor.Notifications;
+using Syncfusion.Blazor.Spinner;
 
 namespace Shipping.Client
 {
     public interface IShippingOperations
     {
+        public bool isLoading { get; set; }
         public SfToast ToastObj { get; set; }
         public Task ShowToast(string Title, string Content, ToastType Type, int Timeout = 3000, int ExtendedTimeout = 1000, bool ShowCloseButton = true, bool ShowProgressBar = true);
-
+        public void ShowSpinner(bool Show);
     }
 
     public class ShippingOperations : IShippingOperations
     {
+        public bool isLoading { get; set; }
         public SfToast ToastObj { get; set; }
         public async Task ShowToast(string Title, string Content, ToastType Type, int Timeout = 3000, int ExtendedTimeout = 1000, bool ShowCloseButton = true, bool ShowProgressBar = true)
         {
@@ -49,6 +52,10 @@ namespace Shipping.Client
             }
 
             await ToastObj.Show(tModel);
+        }
+        public void ShowSpinner(bool Show)
+        {
+            this.isLoading = Show;
         }
 
     }

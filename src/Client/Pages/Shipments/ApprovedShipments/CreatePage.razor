@@ -28,18 +28,13 @@
 
         <div class="form-group">
             <button type="submit" disabled=@Disabled class="btn btn-primary">حفظ</button>
-            <button class="btn btn-link" @onclick="Cancel_Click">إلغاء</button>
+            <button class="btn btn-link" disabled=@Disabled @onclick="Cancel_Click">إلغاء</button>
         </div>
     </EditForm>
 
-    <div>
-        <div id="container">
-            <SfSpinner @bind-Visible="@Disabled" Label="تحميل ...">
-            </SfSpinner>
-        </div>
-    </div>
-
 }
+
+
 @code {
 
     [Inject]
@@ -77,22 +72,27 @@
         try
         {
             Disabled = true;
+            ShippingOperations.ShowSpinner(Disabled);
             var response = await Http.PostAsJsonAsync<CreateApprovedShipmentCommand>("api/ApprovedShipments/CreateApprovedShipment", FModel);
             if (!response.IsSuccessStatusCode)
             {
                 Disabled = false;
+                ShippingOperations.ShowSpinner(Disabled);
                 string error = await response.Content.ReadAsStringAsync();
                 throw new Exception(error);
             }
             else
             {
                 Disabled = false;
+                ShippingOperations.ShowSpinner(Disabled);
                 Navigation.NavigateTo($"/approved-shipments");
                 await ShippingOperations.ShowToast("نجاح", "تمت العملية بنجاح", ToastType.Success);
             }
         }
         catch (Exception ex)
         {
+            Disabled = false;
+            ShippingOperations.ShowSpinner(Disabled);
             await ShippingOperations.ShowToast("خطأ من النظام", ex.Message, ToastType.Error);
         }
     }
