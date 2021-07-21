@@ -19,7 +19,7 @@
         <GridEvents OnToolbarClick="ToolbarClick" TValue="DraftShipmentsDto"></GridEvents>
 
         <SfDataManager Url="@($"api/DraftShipments/GetDraftShipmentsPage/")" Adaptor="Adaptors.WebApiAdaptor"></SfDataManager>
-        <GridColumns>
+        <GridColumns>   
             <GridColumn Field=@(nameof(DraftShipmentsDto.Id)) HeaderText="الأي دي"></GridColumn>
             <GridColumn Field=@(nameof(DraftShipmentsDto.CustomerName)) HeaderText="الراسل"></GridColumn>
             <GridColumn Field=@(nameof(DraftShipmentsDto.ReceiverName)) HeaderText="المرسل اليه"></GridColumn>

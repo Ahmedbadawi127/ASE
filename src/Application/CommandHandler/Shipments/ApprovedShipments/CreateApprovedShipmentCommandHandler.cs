@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Shipping.Domain.Enums;
 using Shipping.Shared.Commands.Shipments;
+using Microsoft.EntityFrameworkCore;
 
 namespace Shipping.Application.CommandHandler.Shipments
 {
@@ -28,24 +29,30 @@ namespace Shipping.Application.CommandHandler.Shipments
         public async Task<int> Handle(CreateApprovedShipmentCommand request, CancellationToken cancellationToken)
         {
 
+            int res = 0;
             try
             {
-                if (request.Id > 0)
+
+                foreach (var approvedShipment in request.ApprovedShipments.ShipmentsPerDeliveryMan)
                 {
-                    var c = await _context.Shipments.FindAsync(request.Id);
 
-                    c.Status = ShipmentStatus.Approved;
-
-                    await _context.SaveChangesAsync(cancellationToken);
-                    return c.Id;
+                    var s = await _context.Shipments.Include(e => e.ApprovedShipment).FirstAsync(e=>e.Id == approvedShipment.Id);
+                    s.Status = ShipmentStatus.Approved;
+                    s.ApprovedShipment.DeliveryManId = request.ApprovedShipments.DeliveryManId;
+                    s.ApprovedShipment.DeliveryManName = request.ApprovedShipments.DeliveryManName;
+                    s.ApprovedShipment.ApprovedNotes = request.Notes;
+                    s.ApprovedShipment.ShipmentRef = approvedShipment.Id;
                 }
+
+                    res = await _context.SaveChangesAsync(cancellationToken);
+                    return res;
             }
             catch (Exception ex)
             {
                 throw ex;
             }
 
-            return 0;
+            return res;
         }
     }
 }

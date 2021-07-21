@@ -2,6 +2,7 @@
 @inject Microsoft.AspNetCore.Components.NavigationManager Navigation
 @using Shipping.Domain.Enums;
 @using Shipping.Shared.Commands.Shipments
+@using Client.Pages.Shipments.ApprovedShipments.ApprovedShipmentsLines
 
 @if (FModel != null)
 {
@@ -14,7 +15,8 @@
 
         <div class="row">
             <div class="form-group col-md-6">
-
+                <label for="Notes">ملاحظات</label>
+                <InputText id="Notes" class="form-control" @bind-Value="FModel.Notes"></InputText>
             </div>
         </div>
         <div class="row">
@@ -25,6 +27,48 @@
 
             </div>
         </div>
+
+
+        <SfGrid AllowReordering="true" AllowTextWrap="true" Width="100%" @ref="GridApprovedShipments" DataSource="@(FModel.ApprovedShipments.ShipmentsPerDeliveryMan.Cast<ShipmentsPerDeliveryManFM>())" Toolbar="ToolBarShipments" AllowPaging="true">
+            <GridEvents OnToolbarClick="ToolBarHandlerApprovedShipments" TValue="ShipmentsPerDeliveryManFM"></GridEvents>
+            <GridPageSettings PageSize="2"></GridPageSettings>
+
+            <GridColumns>
+                <GridColumn Field=@(nameof(ShipmentsPerDeliveryManFM.Id)) HeaderText="الأي دي"></GridColumn>
+                <GridColumn Field=@(nameof(ShipmentsPerDeliveryManFM.CustomerName)) HeaderText="الراسل"></GridColumn>
+                <GridColumn Field=@(nameof(ShipmentsPerDeliveryManFM.ReceiverName)) HeaderText="المرسل اليه"></GridColumn>
+                <GridColumn Field=@(nameof(ShipmentsPerDeliveryManFM.ReceiverStateName)) HeaderText="محافظة المرسل اليه"></GridColumn>
+                <GridColumn Field=@(nameof(ShipmentsPerDeliveryManFM.ReceiverCityName)) HeaderText="مدينة المرسل اليه"></GridColumn>
+                <GridColumn Field=@(nameof(ShipmentsPerDeliveryManFM.Address)) HeaderText="عنوان المرسل اليه"></GridColumn>
+                <GridColumn Field=@(nameof(ShipmentsPerDeliveryManFM.ReceiverPhone)) HeaderText="موبايل المرسل اليه"></GridColumn>
+                <GridColumn Field=@(nameof(ShipmentsPerDeliveryManFM.CashToBeCollected)) HeaderText="مبلغ التحصيل"></GridColumn>
+                <GridColumn Field=@(nameof(ShipmentsPerDeliveryManFM.Notes)) HeaderText="ملاحظات"></GridColumn>
+                <GridColumn Field=@(nameof(ShipmentsPerDeliveryManFM.DeliveryManName)) HeaderText="المندوب"></GridColumn>
+
+                <GridColumn HeaderText="خيارات" TextAlign="TextAlign.Center" Width="170">
+                    <Template Context="cContext">
+
+                        <div class="d-flex justify-content-center">
+                            @*<div class="col-6">
+                                    <button class="btn-icon-btn btn-outline-light" disabled=@Disabled @onclick="@(() => Edit((cContext as ApprovedShipmentsFM).Id))">
+                                        <img class="btn-icon" src="/img/editingColored.svg" />
+                                    </button>
+                                </div>*@
+
+                            <div class="col-6">
+                                <button class="btn-icon-btn btn-outline-light" type="button" disabled="@Disabled" @onclick="@(() => RowDelete((cContext as ShipmentsPerDeliveryManFM)))">
+                                    <img class="btn-icon" src="/img/trash.png" />
+                                </button>
+                            </div>
+
+                        </div>
+
+                    </Template>
+                </GridColumn>
+            </GridColumns>
+        </SfGrid>
+
+
 
         <div class="form-group">
             <button type="submit" disabled=@Disabled class="btn btn-primary">حفظ</button>
@@ -44,19 +88,39 @@
     [Parameter]
     public EventCallback<string> OnSuccess { get; set; }
     bool Disabled { get; set; }
+    SfGrid<ShipmentsPerDeliveryManFM> GridApprovedShipments { get; set; }
+    ApprovedShipmentsFM ActiveApprovedShipments { get; set; }
+    bool IsProcessingApprovedShipments { get; set; }
+
+    private List<ItemModel> ToolBarShipments = new List<ItemModel>(){
+new ItemModel() { Text = "إضافه", Id = "AddNew", TooltipText = "إضافه ", PrefixIcon = "e-add" }
+};
 
     public CreateApprovedShipmentFM FModel { get; set; }
     CreateApprovedShipmentCommandValidator custVal = new CreateApprovedShipmentCommandValidator();
 
 
+    public async Task RowDelete(ShipmentsPerDeliveryManFM rowToDelete)
+    {
+        try
+        {
+            FModel.ApprovedShipments.ShipmentsPerDeliveryMan.Remove(rowToDelete);
+            this.GridApprovedShipments.Refresh();
+        }
+        catch (Exception ex)
+        {
+
+        }
+    }
+
     protected override async Task OnInitializedAsync()
     {
         Disabled = false;
 
-
         FModel = new CreateApprovedShipmentFM
         {
             Status = ShipmentStatus.Approved,
+            ApprovedShipments = new ApprovedShipmentsCommand() { ShipmentsPerDeliveryMan = new List<ShipmentsPerDeliveryManFM>() },
         };
 
     }
@@ -65,6 +129,11 @@
     public async Task Cancel_Click()
     {
         await OnCancel.InvokeAsync(null);
+    }
+
+    private void Delete(int DraftShipmentId)
+    {
+        Console.WriteLine(DraftShipmentId);
     }
 
     protected async Task SubmitClick()
@@ -96,6 +165,62 @@
             await ShippingOperations.ShowToast("خطأ من النظام", ex.Message, ToastType.Error);
         }
     }
+
+
+    // ---
+
+
+    public async Task OnAcceptApprovedShipments(ApprovedShipmentsFM FM)
+    {
+        this.IsProcessingApprovedShipments = false;
+        ActiveApprovedShipments = Clone.DeepClone(FM);
+        FModel.ApprovedShipments.ShipmentsPerDeliveryMan.AddRange(ActiveApprovedShipments.ShipmentsPerDeliveryMan);
+
+        //var indx = FModel.ApprovedShipments.ShipmentsPerDeliveryMan.IndexOf(ActiveApprovedShipments);
+        //if (indx >= 0)
+        //{
+        //    //FModel.AnnexDesignatationResumeEmployees[indx] = ActiveAnnexDesignatationResumeEmployees;
+        //}
+        //else
+        //{
+        //    FModel.ApprovedShipments.ShipmentsPerDeliveryMan.AddRange(FM.ShipmentsPerDeliveryMan);
+        //}
+        //this.ActiveApprovedShipments = null;
+        this.GridApprovedShipments.Refresh();
+
+    }
+    public async Task OnCancelEditApprovedShipments()
+    {
+        this.IsProcessingApprovedShipments = false;
+        this.ActiveApprovedShipments = null;
+    }
+
+    public async Task ToolBarHandlerApprovedShipments(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+    {
+        if (args?.Item?.Id == "AddNew")
+        {
+            ActiveApprovedShipments = new ApprovedShipmentsFM
+            {
+                ShipmentsPerDeliveryMan = new List<ShipmentsPerDeliveryManFM>()
+            };
+            IsProcessingApprovedShipments = true;
+        }
+
+    }
 }
 
 
+@if (this.ActiveApprovedShipments != null)
+{
+    <SfDialog @bind-Visible="@this.IsProcessingApprovedShipments" Width="90%" Height="90%" IsModal="true">
+        <DialogTemplates>
+            <Header>
+                <button class="btn-x" @onclick="OnCancelEditApprovedShipments">&#10006</button>
+                <h1>اضافة شحنة</h1>
+            </Header>
+            <Content>
+                <CreateApprovedShipmentsLines FModel="ActiveApprovedShipments" OnSuccess="OnAcceptApprovedShipments"></CreateApprovedShipmentsLines>
+            </Content>
+        </DialogTemplates>
+    </SfDialog>
+}

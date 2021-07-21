@@ -21,5 +21,7 @@ namespace Shipping.Shared.Dto
         public string Address { get; set; }
         public int CashToBeCollected { get; set; }
         public ShipmentStatus Status { get; set; }
+        public int DeliveryManId { get; set; }
+        public string DeliveryManName { get; set; }
     }
 }

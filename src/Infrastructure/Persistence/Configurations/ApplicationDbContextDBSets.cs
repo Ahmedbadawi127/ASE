@@ -17,9 +17,9 @@ namespace Shipping.Infrastructure.Persistence
 
         //public DbSet<User> User { get; set; }
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<Shipment> Shipments { get; set; }
         public DbSet<DeliveryMan> DeliveryMan { get; set; }
-
+        public DbSet<Shipment> Shipments { get; set; }
+        public DbSet<ApprovedShipment> ApprovedShipments { get; set; }
 
     }
 }

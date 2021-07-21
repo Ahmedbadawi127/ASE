@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shipping.Domain.Entities
 {
-    public partial class Shipment : AuditableEntity
+    public class Shipment : AuditableEntity
     {
         public Shipment()
         {
@@ -18,7 +18,6 @@ namespace Shipping.Domain.Entities
 
         [Key]
         public int Id { get; set; }
-
         public string Name { get; set; }
         public string ReceiverName { get; set; }
         public string ReceiverPhone { get; set; }
@@ -37,6 +36,9 @@ namespace Shipping.Domain.Entities
 
         //public int DeliveryManId { get; set; }
         public DeliveryMan DeliveryMan { get; set; }
+
+        public ApprovedShipment ApprovedShipment { get; set; }
+
 
 
     }

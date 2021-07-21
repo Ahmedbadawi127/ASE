@@ -1,0 +1,201 @@
+﻿@inject Microsoft.AspNetCore.Components.NavigationManager Navigation
+@using Shipping.Domain.Enums;
+@using Shipping.Shared.Commands.Shipments
+
+
+<EditForm Model="@FModel" OnValidSubmit="AcceptChanges">
+    <FluentValidator></FluentValidator>
+
+    <div class="inner-content mt-2 mb-2">
+
+        <div class="form-group col-md-6">
+            <label for="DeliveryMan">المندوب</label>
+            <SfDropDownList id="DeliveryMan" @ref="refDeliveryMan" Enabled="@(DeliveryManQuery != null)" AllowFiltering="true" TValue="int" TItem="DeliveryManDto" @bind-Value="FModel.DeliveryManId"
+                            Placeholder="اختر المندوب" Query="@DeliveryManQuery">
+                <DropDownListEvents TValue="int" TItem="DeliveryManDto" Filtering="DeliveryManFiltering" ValueChange="DeliveryManChange"></DropDownListEvents>
+                <SfDataManager Url="api/DeliveryMen/GetDeliveryMen" Adaptor="Syncfusion.Blazor.Adaptors.WebApiAdaptor" CrossDomain="true"></SfDataManager>
+                <DropDownListFieldSettings Text="NameAr" Value="Id"></DropDownListFieldSettings>
+            </SfDropDownList>
+            <ValidationMessage For="() => FModel.DeliveryManId"></ValidationMessage>
+        </div>
+
+        <div class="form-group col-md-12">
+
+            <div class="form-group col-12">
+
+                <SfGrid ID="Grid" AllowReordering="true" @ref="Grid" Query="@Query" AllowFiltering="true" AllowGrouping="true"
+                        AllowRowDragAndDrop="true" AllowSorting="true" AllowTextWrap="true" Width="100%" AllowPaging="true" TValue="DraftShipmentsDto" EnableRtl="true">
+
+                    <GridPageSettings PageSize="2"></GridPageSettings>
+                    <SfDataManager Url="@($"api/DraftShipments/GetDraftShipmentsPage/")" Adaptor="Adaptors.WebApiAdaptor"></SfDataManager>
+                    <GridSelectionSettings CheckboxOnly="true" PersistSelection="true"></GridSelectionSettings>
+
+                    <GridColumns>
+
+                        <GridColumn Field=@(nameof(DraftShipmentsDto.Id)) HeaderText="الأي دي"></GridColumn>
+                        <GridColumn Field=@(nameof(DraftShipmentsDto.CustomerName)) HeaderText="الراسل"></GridColumn>
+                        <GridColumn Field=@(nameof(DraftShipmentsDto.ReceiverName)) HeaderText="المرسل اليه"></GridColumn>
+                        <GridColumn Field=@(nameof(DraftShipmentsDto.ReceiverStateName)) HeaderText="محافظة المرسل اليه"></GridColumn>
+                        <GridColumn Field=@(nameof(DraftShipmentsDto.ReceiverCityName)) HeaderText="مدينة المرسل اليه"></GridColumn>
+                        <GridColumn Field=@(nameof(DraftShipmentsDto.Address)) HeaderText="عنوان المرسل اليه"></GridColumn>
+                        <GridColumn Field=@(nameof(DraftShipmentsDto.ReceiverPhone)) HeaderText="موبايل المرسل اليه"></GridColumn>
+                        <GridColumn Field=@(nameof(DraftShipmentsDto.CashToBeCollected)) HeaderText="مبلغ التحصيل"></GridColumn>
+
+                        <GridColumn Field=@(nameof(DraftShipmentsDto.Notes)) HeaderText="ملاحظات"></GridColumn>
+
+                        <GridColumn Type="ColumnType.CheckBox" HeaderText="اختر" TextAlign="TextAlign.Center" Width="120"></GridColumn>
+
+                    </GridColumns>
+                </SfGrid>
+            </div>
+
+
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <button type="submit" disabled=@Disabled class="btn btn-primary">موافقه</button>
+    </div>
+</EditForm>
+
+
+@code {
+
+    [Inject]
+    protected HttpClient Http { get; set; }
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+    [Parameter]
+    public EventCallback<ApprovedShipmentsFM> OnSuccess { get; set; }
+    [Parameter]
+    public ApprovedShipmentsFM FModel { get; set; }
+    public List<DraftShipmentsDto> DraftShipments { get; set; }
+
+    public Query Query { get; set; }
+    public Query DeliveryManQuery { get; set; } = null;
+    public SfDropDownList<int, DeliveryManDto> refDeliveryMan { get; set; }
+    bool Disabled { get; set; }
+    SfGrid<DraftShipmentsDto> Grid;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        Disabled = false;
+
+        //List<int> GridIds = FModel.ShipmentsPerDeliveryMan.Select(e => e.Id).ToList();
+        //var Col1Pre = new WhereFilter();
+        //var predicate = new List<WhereFilter>();
+        //predicate.Add(new WhereFilter() { Field = "Id", value = GridIds, Operator = "Contains" });
+        //Col1Pre = WhereFilter.And(predicate);
+        //DeliveryManQuery = new Query().Where(Col1Pre).AddParams("take", 2); // to filter the Grid
+
+
+        DeliveryManQuery = new Query().AddParams("take", 2);
+
+        FModel = new ApprovedShipmentsFM
+        {
+        };
+    }
+
+    public async void GridCheckBoxChange(Microsoft.AspNetCore.Components.ChangeEventArgs args)
+    {
+        var tt = args.Value;
+        Console.WriteLine("aaa" + tt);
+
+    }
+    public async void DeliveryManChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, DeliveryManDto> args)
+    {
+        var Val = args.ItemData.Id;
+        if (Val != 0)
+        {
+            var lData = args.ItemData;
+            FModel.DeliveryManName = lData.NameAr;
+            Query = new Query().AddParams("StateId", lData.StateId);
+        }
+        else
+        {
+            FModel.DeliveryManName = null;
+        }
+        StateHasChanged();
+    }
+
+    private void DeliveryManFiltering(Syncfusion.Blazor.DropDowns.FilteringEventArgs args)
+    {
+        this.DeliveryManQuery = new Query().AddParams("Search", args.Text).AddParams("Take", 6);
+
+        StateHasChanged();
+    }
+
+    protected async Task AcceptChanges()
+    {
+        try
+        {
+            var selectedRec = await Grid.GetSelectedRecords();
+
+
+            FModel.ShipmentsPerDeliveryMan = selectedRec.Select(e => new ShipmentsPerDeliveryManFM()
+            {
+                Address = e.Address,
+                CashToBeCollected = e.CashToBeCollected,
+                CustomerId = e.CustomerId,
+                CustomerName = e.CustomerName,
+                DeliveryManId = FModel.DeliveryManId,
+                DeliveryManName = FModel.DeliveryManName,
+                ReceiverCityId = e.ReceiverCityId,
+                ReceiverCityName = e.ReceiverCityName,
+                ReceiverName = e.ReceiverName,
+                ReceiverPhone = e.ReceiverPhone,
+                ReceiverStateId = e.ReceiverStateId,
+                ReceiverStateName = e.ReceiverStateName,
+                ShipmentName = e.ShipmentName,
+                Status = e.Status,
+                Id = e.Id,
+                Notes = e.Notes,
+            }
+        ).ToList();
+
+
+            FModel.ShipmentsPerDeliveryMan.AddRange(selectedRec.Select(e => new ShipmentsPerDeliveryManFM()
+            {
+                Address = e.Address,
+                CashToBeCollected = e.CashToBeCollected,
+                CustomerId = e.CustomerId,
+                CustomerName = e.CustomerName,
+                DeliveryManId = FModel.DeliveryManId,
+                DeliveryManName = FModel.DeliveryManName,
+                ReceiverCityId = e.ReceiverCityId,
+                ReceiverCityName = e.ReceiverCityName,
+                ReceiverName = e.ReceiverName,
+                ReceiverPhone = e.ReceiverPhone,
+                ReceiverStateId = e.ReceiverStateId,
+                ReceiverStateName = e.ReceiverStateName,
+                ShipmentName = e.ShipmentName,
+                Status = e.Status,
+                Id = e.Id,
+                Notes = e.Notes,
+            }
+        ).ToList());
+
+
+            Disabled = true;
+            ShippingOperations.ShowSpinner(Disabled);
+
+            if (OnSuccess.HasDelegate)
+            {
+                Disabled = false;
+                ShippingOperations.ShowSpinner(Disabled);
+                await OnSuccess.InvokeAsync(FModel);
+                await ShippingOperations.ShowToast("نجاح", "تمت الإضافة", ToastType.Success);
+            }
+        }
+        catch (Exception ex)
+        {
+            Disabled = false;
+            ShippingOperations.ShowSpinner(Disabled);
+            await ShippingOperations.ShowToast("خطأ من النظام", ex.Message, ToastType.Error);
+        }
+    }
+
+
+}
