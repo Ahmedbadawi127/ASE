@@ -95,6 +95,7 @@
 
         FModel = new ApprovedShipmentsFM
         {
+            ShipmentsPerDeliveryMan = new List<ShipmentsPerDeliveryManFM>()
         };
     }
 
@@ -134,26 +135,26 @@
             var selectedRec = await Grid.GetSelectedRecords();
 
 
-            FModel.ShipmentsPerDeliveryMan = selectedRec.Select(e => new ShipmentsPerDeliveryManFM()
-            {
-                Address = e.Address,
-                CashToBeCollected = e.CashToBeCollected,
-                CustomerId = e.CustomerId,
-                CustomerName = e.CustomerName,
-                DeliveryManId = FModel.DeliveryManId,
-                DeliveryManName = FModel.DeliveryManName,
-                ReceiverCityId = e.ReceiverCityId,
-                ReceiverCityName = e.ReceiverCityName,
-                ReceiverName = e.ReceiverName,
-                ReceiverPhone = e.ReceiverPhone,
-                ReceiverStateId = e.ReceiverStateId,
-                ReceiverStateName = e.ReceiverStateName,
-                ShipmentName = e.ShipmentName,
-                Status = e.Status,
-                Id = e.Id,
-                Notes = e.Notes,
-            }
-        ).ToList();
+            //    FModel.ShipmentsPerDeliveryMan = selectedRec.Select(e => new ShipmentsPerDeliveryManFM()
+            //    {
+            //        Address = e.Address,
+            //        CashToBeCollected = e.CashToBeCollected,
+            //        CustomerId = e.CustomerId,
+            //        CustomerName = e.CustomerName,
+            //        DeliveryManId = FModel.DeliveryManId,
+            //        DeliveryManName = FModel.DeliveryManName,
+            //        ReceiverCityId = e.ReceiverCityId,
+            //        ReceiverCityName = e.ReceiverCityName,
+            //        ReceiverName = e.ReceiverName,
+            //        ReceiverPhone = e.ReceiverPhone,
+            //        ReceiverStateId = e.ReceiverStateId,
+            //        ReceiverStateName = e.ReceiverStateName,
+            //        ShipmentName = e.ShipmentName,
+            //        Status = e.Status,
+            //        Id = e.Id,
+            //        Notes = e.Notes,
+            //    }
+            //).ToList();
 
 
             FModel.ShipmentsPerDeliveryMan.AddRange(selectedRec.Select(e => new ShipmentsPerDeliveryManFM()

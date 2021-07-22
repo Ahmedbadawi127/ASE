@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Shipping.Shared.Dto;
 using Microsoft.Extensions.Caching.Memory;
+using Shipping.Domain.Enums;
 
 namespace Shipping.Application.QueryHandler.Shipments
 {
@@ -32,8 +33,8 @@ namespace Shipping.Application.QueryHandler.Shipments
 
         public async Task<List<DraftShipmentsDto>> Handle(GetDraftShipmentsQuery request, CancellationToken cancellationToken)
         {
-            var items = _context.Shipments.
-                Select(e => new DraftShipmentsDto()
+            var items = _context.Shipments.Where(e=>e.Status == ShipmentStatus.Draft)
+                .Select(e => new DraftShipmentsDto()
                 {
                     Id = e.Id,
                     CashToBeCollected = e.CashToBeCollected,

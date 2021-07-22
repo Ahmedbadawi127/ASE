@@ -36,7 +36,7 @@ namespace Shipping.WebUI
                     if (context.Database.IsNpgsql())
                     {
                         //context.Database.EnsureDeleted();
-                        context.Database.EnsureCreated();
+                        //context.Database.EnsureCreated();
                         //dContext.Database.EnsureDeleted();
                         //context.Database.Migrate();
                     }

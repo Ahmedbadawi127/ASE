@@ -38,10 +38,19 @@ namespace Shipping.Application.CommandHandler.Shipments
 
                     var s = await _context.Shipments.Include(e => e.ApprovedShipment).FirstAsync(e=>e.Id == approvedShipment.Id);
                     s.Status = ShipmentStatus.Approved;
-                    s.ApprovedShipment.DeliveryManId = request.ApprovedShipments.DeliveryManId;
-                    s.ApprovedShipment.DeliveryManName = request.ApprovedShipments.DeliveryManName;
-                    s.ApprovedShipment.ApprovedNotes = request.Notes;
-                    s.ApprovedShipment.ShipmentRef = approvedShipment.Id;
+
+                    var tt = new ApprovedShipment()
+                    {
+                        ShipmentRef = approvedShipment.Id,
+                        ApprovedNotes = request.Notes,
+                        DeliveryManId = approvedShipment.DeliveryManId,
+                        DeliveryManName = approvedShipment.DeliveryManName,
+                };
+                    _context.ApprovedShipments.Add(tt);
+                    //s.ApprovedShipment.DeliveryManId = approvedShipment.DeliveryManId;
+                    //s.ApprovedShipment.DeliveryManName = approvedShipment.DeliveryManName;
+                    //s.ApprovedShipment.ApprovedNotes = request.Notes;
+                    //s.ApprovedShipment.ShipmentRef = approvedShipment.Id;
                 }
 
                     res = await _context.SaveChangesAsync(cancellationToken);
