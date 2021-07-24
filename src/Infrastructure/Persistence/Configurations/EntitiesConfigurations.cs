@@ -55,4 +55,21 @@ namespace Shipping.Infrastructure.Persistence.Configurations
         }
     }
 
+    public class StateConfiguration : IEntityTypeConfiguration<State>
+    {
+        public void Configure(EntityTypeBuilder<State> builder)
+        {
+
+        }
+    }
+
+    public class DeliveryManStateConfiguration : IEntityTypeConfiguration<DeliveryManState>
+    {
+        public void Configure(EntityTypeBuilder<DeliveryManState> builder)
+        {
+            builder.HasKey(bc => new { bc.DeliveryManId, bc.StateId });
+            builder.HasOne(bc => bc.DeliveryMan).WithMany(b => b.DeliveryMenStates).HasForeignKey(bc => bc.DeliveryManId);
+            builder.HasOne(bc => bc.State).WithMany(b => b.DeliveryMenStates).HasForeignKey(bc => bc.StateId);
+        }
+    }
 }

@@ -20,6 +20,7 @@ namespace Shipping.Infrastructure.Persistence
         public DbSet<DeliveryMan> DeliveryMan { get; set; }
         public DbSet<Shipment> Shipments { get; set; }
         public DbSet<ApprovedShipment> ApprovedShipments { get; set; }
+        public DbSet<DeliveryManState> DeliveryMenStates { get; set; }
 
     }
 }

@@ -14,6 +14,7 @@ namespace Shipping.Domain.Entities
         public DeliveryMan()
         {
             Shipments = new List<Shipment>();
+            DeliveryMenStates = new List<DeliveryManState>();
         }
 
         public int Id { get; set; }
@@ -44,6 +45,7 @@ namespace Shipping.Domain.Entities
         public string CityName { get; set; }
 
         public List<Shipment> Shipments { get; set; }
+        public List<DeliveryManState> DeliveryMenStates { get; set; }
 
 
     }
