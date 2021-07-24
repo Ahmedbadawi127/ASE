@@ -47,7 +47,7 @@ namespace Shipping.Application.CommandHandler.DeliveryMen
                     Active = request.Active,
                 };
 
-                await _context.DeliveryMan.AddAsync(entity);
+                await _context.DeliveryMen.AddAsync(entity);
                 await _context.SaveChangesAsync(cancellationToken);
                 return entity.Id;
 

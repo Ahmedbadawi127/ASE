@@ -9,7 +9,7 @@ namespace Shipping.Application.Common.Interfaces
     {
         //DbSet<User> User { get; set; }
         DbSet<Customer> Customers { get; set; }
-        DbSet<DeliveryMan> DeliveryMan { get; set; }
+        DbSet<DeliveryMan> DeliveryMen { get; set; }
         DbSet<Shipment> Shipments { get; set; }
         DbSet<ApprovedShipment> ApprovedShipments { get; set; }
         public DbSet<DeliveryManState> DeliveryMenStates { get; set; }

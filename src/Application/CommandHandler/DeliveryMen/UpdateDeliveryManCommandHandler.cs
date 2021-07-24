@@ -32,7 +32,7 @@ namespace Shipping.Application.CommandHandler.DeliveryMen
                 if (request.Id > 0)
                 {
 
-                    var c = await _context.DeliveryMan.FindAsync(request.Id);
+                    var c = await _context.DeliveryMen.FindAsync(request.Id);
 
                     c.NameAr = request.NameAr;
                     c.NameEn = request.NameEn;

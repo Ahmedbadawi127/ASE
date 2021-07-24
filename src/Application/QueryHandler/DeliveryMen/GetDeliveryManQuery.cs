@@ -29,7 +29,7 @@ namespace Shipping.Application.QueryHandler.DeliveryMen
 
         public async Task<DeliveryManDto> Handle(GetDeliveryManQuery request, CancellationToken cancellationToken)
         {
-            var e = _context.DeliveryMan.First(e => e.Id == request.Id);
+            var e = _context.DeliveryMen.First(e => e.Id == request.Id);
             var item = new DeliveryManDto()
             {
                 Id = e.Id,

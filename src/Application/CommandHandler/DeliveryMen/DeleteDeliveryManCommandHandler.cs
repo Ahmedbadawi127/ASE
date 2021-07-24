@@ -32,10 +32,10 @@ namespace Shipping.Application.CommandHandler.DeliveryMen
                 if (request.Id > 0)
                 {
 
-                    var c = await _context.DeliveryMan.FindAsync(request.Id);
+                    var c = await _context.DeliveryMen.FindAsync(request.Id);
                     if (c != null)
                     {
-                        _context.DeliveryMan.Remove(c);
+                        _context.DeliveryMen.Remove(c);
                         await _context.SaveChangesAsync(cancellationToken);
                         return c.Id;
                     }
