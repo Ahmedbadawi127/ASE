@@ -41,6 +41,8 @@ namespace Shipping.WebUI
                         //context.Database.Migrate();
                     }
 
+                    await ApplicationDbContextSeed.SeedSampleDataAsync(context);
+
                 }
                 catch (Exception ex)
                 {

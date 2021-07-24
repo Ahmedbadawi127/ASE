@@ -1,0 +1,100 @@
+﻿@page "/states/update/{Id:int}"
+@inject Microsoft.AspNetCore.Components.NavigationManager Navigation
+@using Shipping.Shared.Commands.Geography.States
+
+@if (FModel != null)
+{
+    <h3>تعديل محافظة</h3>
+
+    <EditForm Model="@FModel" OnValidSubmit="SubmitClick">
+        <FluentValidator></FluentValidator>
+
+
+
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="Name">الاسم بالإنجليزي</label>
+                <InputText id="Name" class="form-control" @bind-Value="FModel.Name"></InputText>
+                <ValidationMessage For="() => FModel.Name"></ValidationMessage>
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            <button type="submit" disabled=@Disabled class="btn btn-primary">حفظ</button>
+            <button class="btn btn-link" disabled=@Disabled @onclick="Cancel_Click">إلغاء</button>
+        </div>
+    </EditForm>
+
+}
+
+
+@code{
+    [Inject]
+    protected HttpClient Http { get; set; }
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+    [Parameter]
+    public EventCallback<string> OnSuccess { get; set; }
+    UpdateStateFM FModel { get; set; }
+    bool Disabled { get; set; }
+    public LookupDto StateData { get; set; }
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Disabled = false;
+
+        if (Id > 0)
+        {
+            var StateData = await Http.GetFromJsonAsync<LookupDto>($"api/States/GetStateById/{Id}");
+
+            FModel = new UpdateStateFM
+            {
+                Id = StateData.Id,
+                Name = StateData.DisplayName,
+            };
+
+        }
+
+    }
+
+
+    public async Task Cancel_Click()
+    {
+        Navigation.NavigateTo($"/states");
+    }
+
+    protected async Task SubmitClick()
+    {
+        try
+        {
+            Disabled = true;
+            ShippingOperations.ShowSpinner(Disabled);
+            var response = await Http.PostAsJsonAsync<UpdateStateCommand>("api/States/Update", FModel);
+            if (!response.IsSuccessStatusCode)
+            {
+                Disabled = false;
+                ShippingOperations.ShowSpinner(Disabled);
+                string error = await response.Content.ReadAsStringAsync();
+                throw new Exception(error);
+            }
+            else
+            {
+                Disabled = false;
+                ShippingOperations.ShowSpinner(Disabled);
+                Navigation.NavigateTo($"/states");
+                await ShippingOperations.ShowToast("نجاح", "تمت العملية بنجاح", ToastType.Success);
+            }
+        }
+        catch (Exception ex)
+        {
+            Disabled = false;
+            ShippingOperations.ShowSpinner(Disabled);
+            await ShippingOperations.ShowToast("خطأ من النظام", ex.Message, ToastType.Error);
+        }
+    }
+}

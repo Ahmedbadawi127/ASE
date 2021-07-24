@@ -66,7 +66,7 @@
                 <SfDropDownList id="State" @ref="refState" Enabled="@(StateQuery != null)" AllowFiltering="true" TValue="int" TItem="LookupDto" @bind-Value="FModel.StateId"
                                 Placeholder="اختر المحافظه" Query="@StateQuery">
                     <DropDownListEvents TValue="int" TItem="LookupDto" Filtering="StateFiltering" ValueChange="StateChange"></DropDownListEvents>
-                    <SfDataManager Url="api/Lookups/GetLookups/AllStates" Adaptor="Syncfusion.Blazor.Adaptors.WebApiAdaptor" CrossDomain="true"></SfDataManager>
+                    <SfDataManager Url="api/States/GetStates" Adaptor="Syncfusion.Blazor.Adaptors.WebApiAdaptor" CrossDomain="true"></SfDataManager>
                     <DropDownListFieldSettings Text="DisplayName" Value="Id"></DropDownListFieldSettings>
                 </SfDropDownList>
                 <ValidationMessage For="() => FModel.StateId"></ValidationMessage>
