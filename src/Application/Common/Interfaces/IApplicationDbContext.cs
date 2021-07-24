@@ -13,6 +13,7 @@ namespace Shipping.Application.Common.Interfaces
         DbSet<Shipment> Shipments { get; set; }
         DbSet<ApprovedShipment> ApprovedShipments { get; set; }
         public DbSet<DeliveryManState> DeliveryMenStates { get; set; }
+        public DbSet<State> States { get; set; }
 
     }
 }

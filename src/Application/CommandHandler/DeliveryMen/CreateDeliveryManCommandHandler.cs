@@ -30,7 +30,7 @@ namespace Shipping.Application.CommandHandler.DeliveryMen
             try
             {
 
-                var entity = new DeliveryMan
+                var DeliveryMan = new DeliveryMan
                 {
                     NameAr = request.NameAr,
                     NameEn = request.NameEn,
@@ -47,9 +47,23 @@ namespace Shipping.Application.CommandHandler.DeliveryMen
                     Active = request.Active,
                 };
 
-                await _context.DeliveryMen.AddAsync(entity);
+                await _context.DeliveryMen.AddAsync(DeliveryMan);
                 await _context.SaveChangesAsync(cancellationToken);
-                return entity.Id;
+
+
+                foreach (var state in request.States)
+                {
+                    var DeliveryManState = new DeliveryManState
+                    {
+                        DeliveryManId = DeliveryMan.Id,
+                        StateId = state
+                    };
+
+                    await _context.DeliveryMenStates.AddAsync(DeliveryManState);
+                }
+
+
+                return DeliveryMan.Id;
 
             }
             catch (Exception ex)

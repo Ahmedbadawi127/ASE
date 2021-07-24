@@ -4,6 +4,7 @@ using Shipping.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Shipping.Infrastructure.Persistence
 {
@@ -27,12 +28,12 @@ namespace Shipping.Infrastructure.Persistence
             }
         }
 
-        public static async Task SeedSampleDataAsync(ApplicationDbContext context)
+        public static async Task SeedSampleDataAsync(ApplicationDbContext _context)
         {
             // Seed, if necessary
-            if (!context.TodoLists.Any())
+            if (!_context.TodoLists.Any())
             {
-                context.TodoLists.Add(new TodoList
+                _context.TodoLists.Add(new TodoList
                 {
                     Title = "Shopping",
                     Colour = Colour.Blue,
@@ -49,7 +50,59 @@ namespace Shipping.Infrastructure.Persistence
                     }
                 });
 
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+            }
+
+            // Seed, if necessary
+            if (!_context.States.Any())
+            {
+                List<State> states = new List<State>
+                {
+                    new State()
+                    {
+                        Name = "Alexandria",
+                    },
+                    new State()
+                    {
+                        Name = "Aswan",
+                    },
+                    new State()
+                    {
+                        Name = "Asyut",
+                    },
+                    new State()
+                    {
+                        Name = "Beheira",
+                    },
+                    new State()
+                    {
+                        Name = "Beni Suef",
+                    },
+                    new State()
+                    {
+                        Name = "Cairo",
+                    },
+                    new State()
+                    {
+                        Name = "Dakahlia",
+                    },
+                    new State()
+                    {
+                        Name = "Damietta",
+                    },
+                    new State()
+                    {
+                        Name = "Faiyum",
+                    },
+                    new State()
+                    {
+                        Name = "Gharbia",
+                    },
+                };
+
+                await _context.States.AddRangeAsync(states);
+
+                await _context.SaveChangesAsync();
             }
         }
     }

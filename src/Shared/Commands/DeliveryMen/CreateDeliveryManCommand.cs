@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using Shipping.Shared.Extensions;
+using System.Collections.Generic;
 
 namespace Shipping.Shared.Commands.DeliveryMen
 {
@@ -52,6 +53,8 @@ namespace Shipping.Shared.Commands.DeliveryMen
         public string Address { get; set; }
         [DisplayName("فعال")]
         public bool? Active { get; set; }
+        public List<int> States { get; set; }
+
 
 
     }

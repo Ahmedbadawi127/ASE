@@ -15,7 +15,6 @@ namespace Shipping.Domain.Entities
         }
         public int Id { get; set; }
         public string Name { get; set; }
-        public string DisplayName { get; set; }
 
         public List<DeliveryManState> DeliveryMenStates { get; set; }
 
