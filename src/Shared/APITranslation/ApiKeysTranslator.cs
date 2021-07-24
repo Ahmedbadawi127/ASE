@@ -22,13 +22,15 @@ namespace Shipping.Shared.ApiKeysTranslation
 
             if (Keys == Keys.ShipmentStatus)
             {
-                switch (str)
-                {
+                Enum.TryParse(str, out ShipmentStatus myStatus);
 
-                    case "Draft": return "مسوده";
-                    case "Delivering": return "قيد الشحن";
-                    case "Delivered": return "تم التسليم";
-                    case "returned": return "مرتجع";
+                switch (myStatus)
+                {
+                    case ShipmentStatus.Undefined: return "غير معرف";
+                    case ShipmentStatus.Draft: return "مسوده";
+                    case ShipmentStatus.Approved: return "قيد الشحن";
+                    case ShipmentStatus.Delivered: return "تم التسليم";
+                    case ShipmentStatus.returned: return "مرتجع";
 
                     default:
                         return str;
