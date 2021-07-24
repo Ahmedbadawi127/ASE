@@ -33,19 +33,20 @@
 
     <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12 mb-3">
 
-        @if (FModel.DeliveryManId > 0)
-        {
-            <table class="table-light">
-                <tr>
-                    <th>الأي دي</th>
-                    <th>الاسم العربي</th>
-                    <th>الاسم الانجليزي</th>
-                    <th>موبايل</th>
-                    <th>محافظة</th>
-                    <th>مدينة</th>
-                    <th>النوع</th>
-                    <th>العمر</th>
-                </tr>
+
+        <table class="table-light">
+            <tr>
+                <th>الأي دي</th>
+                <th>الاسم العربي</th>
+                <th>الاسم الانجليزي</th>
+                <th>موبايل</th>
+                <th>محافظة</th>
+                <th>مدينة</th>
+                <th>النوع</th>
+                <th>العمر</th>
+            </tr>
+            @if (FModel.DeliveryManId > 0)
+            {
                 <tr>
                     <td>@(DeliveryManDataSource.Id)</td>
                     <td>@(DeliveryManDataSource.NameAr)</td>
@@ -56,10 +57,10 @@
                     <td>@(DeliveryManDataSource.GenderName)</td>
                     <td>@(DeliveryManDataSource.Age)</td>
                 </tr>
+            }
 
-            </table>
+        </table>
 
-        }
 
 
 
