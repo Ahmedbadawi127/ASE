@@ -63,13 +63,13 @@ namespace Shipping.Infrastructure.Persistence.Configurations
         }
     }
 
-    public class DeliveryManStateConfiguration : IEntityTypeConfiguration<DeliveryManState>
+    public class DeliveryManStateConfiguration : IEntityTypeConfiguration<DeliveryManStatesPrices>
     {
-        public void Configure(EntityTypeBuilder<DeliveryManState> builder)
+        public void Configure(EntityTypeBuilder<DeliveryManStatesPrices> builder)
         {
             builder.HasKey(bc => new { bc.DeliveryManId, bc.StateId });
             builder.HasOne(bc => bc.DeliveryMan).WithMany(b => b.DeliveryMenStates).HasForeignKey(bc => bc.DeliveryManId);
-            builder.HasOne(bc => bc.State).WithMany(b => b.DeliveryMenStates).HasForeignKey(bc => bc.StateId);
+            builder.HasOne(bc => bc.State).WithMany(b => b.DeliveryMenStatesPrices).HasForeignKey(bc => bc.StateId);
         }
     }
 }

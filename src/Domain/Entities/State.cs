@@ -11,12 +11,12 @@ namespace Shipping.Domain.Entities
     {
         public State()
         {
-            DeliveryMenStates = new List<DeliveryManState>();
+            DeliveryMenStatesPrices = new List<DeliveryManStatesPrices>();
         }
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public List<DeliveryManState> DeliveryMenStates { get; set; }
+        public List<DeliveryManStatesPrices> DeliveryMenStatesPrices { get; set; }
 
     }
 }

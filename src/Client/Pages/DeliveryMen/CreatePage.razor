@@ -85,6 +85,45 @@
             </div>
         </div>
 
+        <div>
+            <label asp-for="Ingredients" class="control-label">أسعار التوصيل للمحافظات</label>
+
+            <SfGrid ID="DeliveryManStatesGrid" DataSource="@FModel.DeliveryManStatesPrices" @ref="refDeliveryManStatespricesGrid" AllowReordering="true" AllowSelection="true"
+                    AllowSorting="true" Toolbar="@(ToolbarItems)" Height="100%" Width="100%">
+                <GridEditSettings AllowAdding="true" AllowEditing="true" Mode="EditMode.Normal"></GridEditSettings>
+                <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.FilterBar"></GridFilterSettings>
+                <GridSelectionSettings Type="Syncfusion.Blazor.Grids.SelectionType.Multiple"></GridSelectionSettings>
+                <GridEvents OnActionBegin="DeliveryManStatesPricesActionBeginHandler"
+                            TValue="DeliveryManStatesPricesDto"></GridEvents>
+                <GridColumns>
+
+                    <GridColumn Field="State.DisplayName" HeaderText="المحافظة" ValidationRules="@(new ValidationRules { Required = true })" EditType="EditType.DropDownEdit">
+                        <EditTemplate Context="cContext">
+                            <SfDropDownList ID="GridState" @ref="refDeliveryManState" Query="@DeliveryManStateQuery" Enabled="@(DeliveryManStateQuery != null)" @bind-value="(cContext as DeliveryManStatesPricesDto).State.Id" TValue="int" TItem="LookupDto"
+                                            Placeholder="المحافظه">
+                                <DropDownListEvents TValue="int" TItem="LookupDto" Filtering="DeliveryManStateFiltering"></DropDownListEvents>
+                                <SfDataManager Url="api/States/GetStates" Adaptor="Syncfusion.Blazor.Adaptors.WebApiAdaptor" CrossDomain="true"></SfDataManager>
+                                <DropDownListFieldSettings Text="DisplayName" Value="Id"></DropDownListFieldSettings>
+                                <DropDownListEvents TValue="int" TItem="LookupDto" ValueChange="(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, LookupDto> args) => (cContext as DeliveryManStatesPricesDto).State.DisplayName = args.ItemData.DisplayName"></DropDownListEvents>
+                            </SfDropDownList>
+                        </EditTemplate>
+                    </GridColumn>
+
+                    <GridColumn Field=@nameof(DeliveryManStatesPricesDto.DeliveryPrice) HeaderText="سعر التوصيل" ValidationRules="@(new ValidationRules { Required = true, Number = true, Min = 1 })"></GridColumn>
+
+                    <GridColumn TextAlign="TextAlign.Center" Width="80" HeaderText="حذف">
+                        <Template Context="cContext">
+                            <div class="col-6">
+                                <button class="btn-icon-btn btn-outline-light" type="button" @onclick="@(() => Delete((cContext as DeliveryManStatesPricesDto)))">
+                                    <img class="btn-icon" src="/img/trash.png" />
+                                </button>
+                            </div>
+                        </Template>
+                    </GridColumn>
+
+                </GridColumns>
+            </SfGrid>
+        </div>
 
 
         <div class="form-group">
@@ -97,14 +136,14 @@
 
 
 @code{
-    [Inject]
-    protected HttpClient Http { get; set; }
-    [Parameter]
-    public EventCallback OnCancel { get; set; }
-    [Parameter]
-    public EventCallback<string> OnSuccess { get; set; }
-    CreateDeliveryManFM FModel { get; set; }
-    bool Disabled { get; set; }
+        [Inject]
+        protected HttpClient Http { get; set; }
+        [Parameter]
+        public EventCallback OnCancel { get; set; }
+        [Parameter]
+        public EventCallback<string> OnSuccess { get; set; }
+        CreateDeliveryManFM FModel { get; set; }
+        bool Disabled { get; set; }
     public SfDropDownList<int, LookupDto> refState { get; set; }
     public Query StateQuery { get; set; } = null;
     public SfDropDownList<int, LookupWithCategDto> refCity { get; set; }
@@ -112,11 +151,18 @@
     public SfDropDownList<int, LookupDto> refGender { get; set; }
     public Query GenderQuery { get; set; } = null;
     public DeliveryManDto DeliveryManData { get; set; }
-
-    [Parameter]
-    public int Id { get; set; }
-
     CreateDeliveryManCommandValidator custVal = new CreateDeliveryManCommandValidator();
+
+    public SfDropDownList<int, LookupDto> refDeliveryManState { get; set; }
+    public Query DeliveryManStateQuery { get; set; } = null;
+    SfGrid<DeliveryManStatesPricesDto> refDeliveryManStatespricesGrid;
+
+    private List<object> ToolbarItems = new List<object>() {
+        new ItemModel() { Text = "إضافة", PrefixIcon = "e-add", Id = "DeliveryManStatesGrid_add"},
+        new ItemModel(){ Text = "تعديل", PrefixIcon= "e-edit", Id="DeliveryManStatesGrid_edit"},
+        new ItemModel(){ Text = "حفظ", PrefixIcon= "e-update", Id="DeliveryManStatesGrid_update"},
+        new ItemModel(){ Text = "إلغاء", PrefixIcon= "e-cancel", Id="DeliveryManStatesGrid_cancel"}
+    };
 
 
     public async void GenderChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, LookupDto> args)
@@ -134,6 +180,12 @@
         StateHasChanged();
     }
 
+    private void DeliveryManStateFiltering(Syncfusion.Blazor.DropDowns.FilteringEventArgs args)
+    {
+        //this.DeliveryManStateQuery = new Query().AddParams("Search", args.Text).AddParams("Take", 6);
+
+        StateHasChanged();
+    }
 
     public async void StateChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, LookupDto> args)
     {
@@ -188,6 +240,8 @@
 
         this.StateQuery = new Query().AddParams("Take", 6);
         this.GenderQuery = new Query();
+        this.DeliveryManStateQuery = new Query();
+
 
         FModel = new CreateDeliveryManFM
         {
@@ -196,6 +250,39 @@
 
     }
 
+    private void Delete(DeliveryManStatesPricesDto rowToDelete)
+    {
+        FModel.DeliveryManStatesPrices.Remove(rowToDelete);
+        refDeliveryManStatespricesGrid.Refresh();
+    }
+
+
+    public async Task DeliveryManStatesPricesActionBeginHandler(ActionEventArgs<DeliveryManStatesPricesDto> Args)
+    {
+        if (Args.RequestType == Syncfusion.Blazor.Grids.Action.Save && Args.Action == "Add")
+        {
+            var IsPresent = FModel.DeliveryManStatesPrices.Where(or => or.State.DisplayName == Args.Data.State.DisplayName).FirstOrDefault();
+            if (IsPresent != null)
+            {
+                await ShippingOperations.ShowToast("خطأ من النظام", $"محافظة '{Args.RowData.State.DisplayName}' مضافه بالفعل", ToastType.Warning);
+
+                Args.Cancel = true;   //if the same order id field exist then here we have cancelled default saving action. It will stay in edit mode
+            }
+        }
+
+        if (Args.RequestType == Syncfusion.Blazor.Grids.Action.Save && Args.Action == "Edit")
+        {
+            var data = FModel.DeliveryManStatesPrices.Where(or => or.State.DisplayName == Args.RowData.State.DisplayName).FirstOrDefault();
+            if (data != null)
+            {
+                data.State.DisplayName = Args.Data.State.DisplayName;
+                data.DeliveryPrice = Args.Data.DeliveryPrice;
+            }
+            refDeliveryManStatespricesGrid.Refresh();
+
+        }
+
+    }
 
 
 

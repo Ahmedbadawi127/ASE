@@ -51,16 +51,18 @@ namespace Shipping.Application.CommandHandler.DeliveryMen
                 await _context.SaveChangesAsync(cancellationToken);
 
 
-                foreach (var state in request.States)
+                foreach (var statePrice in request.DeliveryManStatesPrices)
                 {
-                    var DeliveryManState = new DeliveryManState
+                    var DeliveryManState = new DeliveryManStatesPrices
                     {
                         DeliveryManId = DeliveryMan.Id,
-                        StateId = state
+                        StateId = statePrice.State.Id,
+                        DeliveryPrice = statePrice.DeliveryPrice,
                     };
 
                     await _context.DeliveryMenStates.AddAsync(DeliveryManState);
                 }
+                await _context.SaveChangesAsync(cancellationToken);
 
 
                 return DeliveryMan.Id;

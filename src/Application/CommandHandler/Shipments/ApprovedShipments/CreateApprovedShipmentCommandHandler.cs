@@ -47,10 +47,7 @@ namespace Shipping.Application.CommandHandler.Shipments
                         DeliveryManName = approvedShipment.DeliveryManName,
                 };
                     _context.ApprovedShipments.Add(tt);
-                    //s.ApprovedShipment.DeliveryManId = approvedShipment.DeliveryManId;
-                    //s.ApprovedShipment.DeliveryManName = approvedShipment.DeliveryManName;
-                    //s.ApprovedShipment.ApprovedNotes = request.Notes;
-                    //s.ApprovedShipment.ShipmentRef = approvedShipment.Id;
+
                 }
 
                     res = await _context.SaveChangesAsync(cancellationToken);

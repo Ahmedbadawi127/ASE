@@ -53,9 +53,7 @@ namespace Shipping.Shared.Commands.DeliveryMen
         public string Address { get; set; }
         [DisplayName("فعال")]
         public bool? Active { get; set; }
-        public List<int> States { get; set; }
-
-
+        public List<DeliveryManStatesPricesDto> DeliveryManStatesPrices { get; set; } = new List<DeliveryManStatesPricesDto>();
 
     }
 
@@ -85,8 +83,6 @@ namespace Shipping.Shared.Commands.DeliveryMen
             RuleFor(v => v.Address).NotEmpty().WithName(ReflectionExtensions.GetPropertyDisplayName<CreateDeliveryManCommand>(i => i.Address));
             RuleFor(v => v.GenderId).NotEmpty().WithName(ReflectionExtensions.GetPropertyDisplayName<CreateDeliveryManCommand>(i => i.GenderId));
             RuleFor(v => v.Age).NotEmpty().WithName(ReflectionExtensions.GetPropertyDisplayName<CreateDeliveryManCommand>(i => i.Age));
-
-
 
         }
     }

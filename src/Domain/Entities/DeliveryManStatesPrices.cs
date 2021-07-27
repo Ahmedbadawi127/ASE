@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Shipping.Domain.Entities
 {
-    public class DeliveryManState
+    public class DeliveryManStatesPrices
     {
+        public int Id { get; set; }
+        public double DeliveryPrice { get; set; }
         public int DeliveryManId { get; set; }
         public DeliveryMan DeliveryMan { get; set; }
         public int StateId { get; set; }
