@@ -33,10 +33,17 @@ namespace Shipping.WebUI
                 {
                     var context = services.GetRequiredService<ApplicationDbContext>();
 
+                    //Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Testing");
+
                     if (context.Database.IsNpgsql())
                     {
                         //context.Database.EnsureDeleted();
-                        //context.Database.EnsureCreated();
+                        string env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+                        if (env == "Testing")
+                        {
+                            context.Database.EnsureCreated();
+                        }
                         //dContext.Database.EnsureDeleted();
                         //context.Database.Migrate();
                     }
