@@ -13,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Data;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Shipping.WebUI
 {
@@ -32,6 +34,17 @@ namespace Shipping.WebUI
                 try
                 {
                     var context = services.GetRequiredService<ApplicationDbContext>();
+
+                    //var cmd = context.Database.GetDbConnection().CreateCommand();
+
+                    //if (cmd.Connection.State != ConnectionState.Open)
+                    //{
+                    //    cmd.Connection.Open();
+                    //}
+                    //if (context.Database.CurrentTransaction != null)
+                    //{
+                    //    cmd.Transaction = context.Database.CurrentTransaction.GetDbTransaction();
+                    //}
 
                     //Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Testing");
 
